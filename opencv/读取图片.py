@@ -1,3 +1,4 @@
+from time import clock_settime
 import cv2
 import matplotlib as plt
 import numpy as np
