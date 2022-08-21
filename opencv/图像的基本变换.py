@@ -14,4 +14,5 @@ cv2.imshow("on", img4)
 #图像旋转
 img5 = cv2.rotate(img3, 90)
 cv2.imshow("ok", img5)
+#还有一个仿射变换
 cv2.waitKey(0)
