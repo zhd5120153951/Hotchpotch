@@ -2,6 +2,7 @@ from torch.nn import Module
 from torch import nn
 import torch.nn.functional as func 
 
+# MNIST分类模型
 class Model(Module):
     def __init__(self):
         super(Model, self).__init__()
@@ -59,3 +60,4 @@ class LeNet(Module):
         y = self.fc3(y)
         output = func.log_softmax(y, dim=1)
         return output
+# CIFAR模型
