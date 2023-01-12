@@ -38,6 +38,7 @@ from utils.plots import Annotator, colors, save_one_box
 from utils.torch_utils import select_device, time_sync
 
 
+
 # 添加一个关于界面
 # 窗口主类
 class MainWindow(QTabWidget):
