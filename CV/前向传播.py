@@ -11,12 +11,16 @@ numpy手动实现模拟一个线性层
 #搭建一个2层的神经网络模型
 #每层都是线性层
 class TorchModel(nn.Module):
+    '''
+    这就是在定义模型结构
+    '''
 
     def __init__(self, input_size, hidden_size1, hidden_size2):
         super(TorchModel, self).__init__()
         self.layer1 = nn.Linear(input_size, hidden_size1)
         self.layer2 = nn.Linear(hidden_size1, hidden_size2)
 
+    #这是前向传播---等价于在计算y=w*x+b
     def forward(self, x):
         hidden = self.layer1(x)  #shape: (batch_size, input_size) -> (batch_size, hidden_size1)
         y_pred = self.layer2(hidden)  #shape: (batch_size, hidden_size1) -> (batch_size, hidden_size2)
@@ -25,13 +29,14 @@ class TorchModel(nn.Module):
 
 #自定义模型
 class DiyModel:
-    #y1 = w1*x+b---> y=y1*w2+b2--->y输出
+    #同理：定义模型结构---自定义和框架的区别就在这里：框架已经封装好了包函数--我们只需要确定输入、每层的形状，随机权重就可以了
     def __init__(self, w1, b1, w2, b2):
         self.w1 = w1
         self.b1 = b1
         self.w2 = w2
         self.b2 = b2
 
+    #y1 = w1*x+b---> y=y1*w2+b2--->y输出
     def forward(self, x):
         #第一层计算
         hidden = np.dot(x, self.w1.T) + self.b1  #1*5
