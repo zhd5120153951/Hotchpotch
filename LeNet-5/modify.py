@@ -1,7 +1,16 @@
+'''
+@FileName   :modify.py
+@Description:裁剪图像大小
+@Date       :2023/02/25 12:07:49
+@Author     :daito
+@Website    :Https://github.com/zhd5120153951
+@Copyright  :daito
+@License    :None
+@version    :1.0
+@Email      :2462491568@qq.com
+'''
 import os
 import cv2
-from numpy import char
-from pyparsing import Char
 
 
 def resize_img(DATADIR, data_k, img_size):
