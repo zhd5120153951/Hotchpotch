@@ -13,6 +13,7 @@ import os
 import cv2
 import numpy as np
 import random
+import torch
 import torch.nn as nn
 from tqdm import tqdm
 from torch.utils.data import Dataset
@@ -96,70 +97,81 @@ class FireNet(nn.Module()):
         self.relu2 = nn.ReLU()
         self.avgpool2 = nn.AvgPool2d(2, 2)
         self.dropout2 = nn.Dropout(0.5)
-        
+
         self.flatten1 = nn.Flatten()
-        self.dense1 = 
-        self.fc1 = nn.Linear(16 * 5 * 5, 120)
-        self.fc2 = nn.Linear(120, 84)
-        self.fc3 = nn.Linear(84, 10)
+        self.dense1 = nn.Linear(2304, 256)
+        self.dropout3 = nn.Dropout(0.2)
+        self.dense2 = nn.Linear(256, 128)
+        self.dense3 = nn.Linear(128, 2)
 
     def forward(self, x):
         x = self.conv1(x)
-        x = self.relu(x)
-        x = self.maxpool1(x)
+        x = self.relu1(x)
+        x = self.avgpool1(x)
+        x = self.dropout1(x)
+
         x = self.conv2(x)
-        x = self.maxpool2(x)
-        x = x.view(-1, 16 * 5 * 5)
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = self.fc3(x)
-        output = F.log_softmax(x, dim=1)
-        return output
+        x = self.relu2(x)
+        x = self.avgpool2(x)
+        x = self.dropout2(x)
+
+        x = self.flatten1(x)
+        x = self.dense1(x)
+
+        x = self.dropout3(x)
+        x = self.dense2(x)
+        x = self.dense3(x)
+        return x
 
 
-
-model.add(Flatten())
-model.add(Dense(units=256, activation='relu'))
-model.add(Dropout(0.2))
-
-model.add(Dense(units=128, activation='relu'))
-
-model.add(Dense(units=2, activation='softmax'))
-
-model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-
-history = model.fit(X, Y, batch_size=32, epochs=100, validation_split=0.3)
-# model.fit_generator(datagen.flow(X, Y, batch_size=32),
-#                     epochs=100,
-#                     verbose=1)
-
-model.save('TrainedModels/Fire-64x64-color-v7.1-soft.h5')
-
-from matplotlib import pyplot as plt
-
-plt.plot(history.history['acc'])
-plt.plot(history.history['val_acc'])
-plt.title('model accuracy')
-plt.ylabel('accuracy')
-plt.xlabel('epoch')
-plt.legend(['train', 'validation'], loc='upper left')
-plt.show()
-
-plt.plot(history.history['loss'])
-plt.plot(history.history['val_loss'])
-plt.title('model loss')
-plt.ylabel('loss')
-plt.xlabel('epoch')
-plt.legend(['train', 'validation'], loc='upper left')
-plt.show()
-
+'''    
 import tensorflow as tf
-from tensorflow.keras.utils import plot_model
+from tensorflow.keras import Sequential, layers, optimizers
+#import os
+#os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-model = tf.keras.models.load_model('TrainedModels/Fire-64x64-color-v7-soft.h5')
+# 加载数据集
+mnist = tf.keras.datasets.mnist
+(trainImage, trainLabel),(testImage, testLabel) = mnist.load_data()
+ 
+for i in [trainImage,trainLabel,testImage,testLabel]:
+    print(i.shape)
 
-# model.fit_generator(datagen.flow(X, Y, batch_size=32),
-#                     epochs=100,
-#                   verbose=1)
+trainImage = tf.reshape(trainImage,(60000,28,28,1))
+testImage = tf.reshape(testImage,(10000,28,28,1))
+ 
+for i in [trainImage,trainLabel,testImage,testLabel]:
+    print(i.shape)
 
-# plot_model(model, to_file='model_small.svg', show_layer_names=False, show_shapes=True)"
+# 网络定义
+network = Sequential([
+    # 卷积层1
+    layers.Conv2D(filters=6,kernel_size=(5,5),activation="relu",input_shape=(28,28,1),padding="same"),
+    layers.MaxPool2D(pool_size=(2,2),strides=2),
+    
+    # 卷积层2
+    layers.Conv2D(filters=16,kernel_size=(5,5),activation="relu",padding="same"),
+    layers.MaxPool2D(pool_size=2,strides=2),
+    
+    # 卷积层3
+    layers.Conv2D(filters=32,kernel_size=(5,5),activation="relu",padding="same"),
+    
+    layers.Flatten(),
+    
+    # 全连接层1
+    layers.Dense(200,activation="relu"),
+    
+    # 全连接层2
+    layers.Dense(10,activation="softmax")    
+])
+network.summary()
+
+# 模型训练 训练30个epoch
+network.compile(optimizer='adam',loss="sparse_categorical_crossentropy",metrics=["accuracy"])
+network.fit(trainImage,trainLabel,epochs=50,validation_split=0.1)
+
+# 模型保存
+network.save('./LeNet-5-MNIST-Tensorflow/lenet_mnist.h5')
+print('lenet_mnist model saved')
+del network
+'''
