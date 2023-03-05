@@ -1,5 +1,5 @@
 '''
-@FileName   :modify.py
+@FileName   :resize_img.py
 @Description:裁剪图像大小
 @Date       :2023/02/25 12:07:49
 @Author     :daito
@@ -28,15 +28,19 @@ def resize_img(DATADIR, data_k, img_size):
             new_array = cv2.resize(img_array, (w, h), interpolation=cv2.INTER_CUBIC)
             img_name = str(i)
             #生成图片的存储路劲
-            save_path = path + '_new/'
-            if os.path.exists(save_path):
+            # save_path = path + '_new/'
+            # 直接覆盖上次的
+            path = path + '/'
+            if os.path.exists(path):
                 print(i)
                 #调用写图片
-                save_img = save_path + img_name
+                #save_img = save_path + img_name
+                save_img = path + img_name
                 cv2.imwrite(save_img, new_array)
             else:
-                os.mkdir(save_path)
-                save_img = save_path + img_name
+                #os.mkdir(save_path)
+                #save_img = save_path + img_name
+                save_img = path + img_name
                 cv2.imwrite(save_img, new_array)
 
 
@@ -44,8 +48,8 @@ if __name__ == '__main__':
     #路径
 
     #DATADIR = "E:/test/LeNet-5/data/LEDNUM/train_data/"
-    DATADIR = "E:/test/LeNet-5/data/LEDNUM/test_data/"
-    img_size = [320, 320]
+    DATADIR = "E:/test/DataSet/LEDNUM/test_data/"
+    img_size = [224, 224]
     for i in range(0, 10):
         data_k = str(i)
         resize_img(DATADIR, data_k, img_size)

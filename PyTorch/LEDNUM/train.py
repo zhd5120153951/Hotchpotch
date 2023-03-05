@@ -1,7 +1,9 @@
 from PIL import Image
 from torch.utils.data import Dataset
+from torch.utils.data import TensorDataset, DataLoader
 from torchvision import transforms
 from torch import optim
+from model import LeNet
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 import torch.nn as nn
@@ -9,6 +11,7 @@ import torch
 import time
 
 
+#通过Pytorch的Dataset类,自定义加载自己的数据集-----可以作为通过
 class MyDataset(Dataset):
 
     def __init__(self, txt_path, transform=None, target_transform=None):
@@ -33,64 +36,7 @@ class MyDataset(Dataset):
     def __len__(self):
         return len(self.imgs)
 
-
-pipline_train = transforms.Compose([
-    #随机旋转图片
-    transforms.RandomHorizontalFlip(),
-    #将图片尺寸resize到32x32
-    transforms.Resize((32, 32)),
-    #将图片转化为Tensor格式
-    transforms.ToTensor(),
-    #正则化(当模型出现过拟合的情况时，用来降低模型的复杂度)
-    transforms.Normalize((0.1307, ), (0.3081, ))
-])
-pipline_test = transforms.Compose([
-    #将图片尺寸resize到32x32
-    transforms.Resize((32, 32)),
-    transforms.ToTensor(),
-    transforms.Normalize((0.1307, ), (0.3081, ))
-])
-train_data = MyDataset('./LeNet-5/data/LEDNUM/train.txt', transform=pipline_train)
-test_data = MyDataset('./LeNet-5/data/LEDNUM/test.txt', transform=pipline_test)
-
-#train_data 和test_data包含多有的训练与测试数据，调用DataLoader批量加载
-trainloader = torch.utils.data.DataLoader(dataset=train_data, batch_size=128, shuffle=True)
-testloader = torch.utils.data.DataLoader(dataset=test_data, batch_size=64, shuffle=False)
-
-
-class LeNet(nn.Module):
-
-    def __init__(self):
-        super(LeNet, self).__init__()
-        self.conv1 = nn.Conv2d(1, 6, 5)
-        self.relu = nn.ReLU()
-        self.maxpool1 = nn.MaxPool2d(2, 2)
-        self.conv2 = nn.Conv2d(6, 16, 5)
-        self.maxpool2 = nn.MaxPool2d(2, 2)
-        self.fc1 = nn.Linear(16 * 5 * 5, 120)
-        self.fc2 = nn.Linear(120, 84)
-        self.fc3 = nn.Linear(84, 10)
-
-    def forward(self, x):
-        x = self.conv1(x)
-        x = self.relu(x)
-        x = self.maxpool1(x)
-        x = self.conv2(x)
-        x = self.maxpool2(x)
-        x = x.view(-1, 16 * 5 * 5)
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = self.fc3(x)
-        output = F.log_softmax(x, dim=1)
-        return output
-
     #创建模型，部署gpu
-
-
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = LeNet().to(device)
-#定义优化器
-optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 
 def train_runner(model, device, trainloader, optimizer, epoch):
@@ -153,26 +99,56 @@ def test_runner(model, device, testloader):
         print("test_avarage_loss: {:.6f}, accuracy: {:.6f}%".format(test_loss / total, 100 * (correct / total)))
 
 
-#调用
-epoch = 200
-Loss = []
-Accuracy = []
-for epoch in range(1, epoch + 1):
-    print("start_time", time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
-    loss, acc = train_runner(model, device, trainloader, optimizer, epoch)
-    Loss.append(loss)
-    Accuracy.append(acc)
-    test_runner(model, device, testloader)
-    print("end_time: ", time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), '\n')
+if __name__ == '__main__':
+    # 预处理
+    pipline_train = transforms.Compose([
+        #随机旋转图片
+        transforms.RandomHorizontalFlip(),
+        #将图片尺寸resize到32x32
+        transforms.Resize((32, 32)),
+        #将图片转化为Tensor格式
+        transforms.ToTensor(),
+        #正则化(当模型出现过拟合的情况时，用来降低模型的复杂度)
+        transforms.Normalize((0.1307, ), (0.3081, ))
+    ])
+    pipline_test = transforms.Compose([
+        #将图片尺寸resize到32x32
+        transforms.Resize((32, 32)),
+        transforms.ToTensor(),
+        transforms.Normalize((0.1307, ), (0.3081, ))
+    ])
+    train_data = MyDataset('./DataSet/LEDNUM/train.txt', transform=pipline_train)
+    test_data = MyDataset('./DataSet/LEDNUM/test.txt', transform=pipline_test)
 
-print('Finished Training')
-plt.subplot(2, 1, 1)
-plt.plot(Loss)
-plt.title('Loss')
-plt.show()
-plt.subplot(2, 1, 2)
-plt.plot(Accuracy)
-plt.title('Accuracy')
-plt.show()
+    #train_data 和test_data包含多有的训练与测试数据，调用DataLoader批量加载
+    trainloader = torch.utils.data.DataLoader(dataset=train_data, batch_size=32, shuffle=True)
+    testloader = torch.utils.data.DataLoader(dataset=test_data, batch_size=8, shuffle=False)
 
-torch.save(model, './LeNet-5/models/model-mine.pth')  #保存模型
+    # 部署到GPU
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model = LeNet().to(device)
+    #定义优化器
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    #调用
+    epoch = 200
+    Loss = []
+    Accuracy = []
+    for epoch in range(1, epoch + 1):
+        print("start_time", time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
+        loss, acc = train_runner(model, device, trainloader, optimizer, epoch)
+        Loss.append(loss)
+        Accuracy.append(acc)
+        test_runner(model, device, testloader)
+        print("end_time: ", time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), '\n')
+
+    print('Finished Training')
+    plt.subplot(2, 1, 1)
+    plt.plot(Loss)
+    plt.title('Loss')
+    plt.show()
+    plt.subplot(2, 1, 2)
+    plt.plot(Accuracy)
+    plt.title('Accuracy')
+    plt.show()
+
+    torch.save(model, './PyTorch/LEDNUM/model-mine.pth')  #保存模型

@@ -3,7 +3,7 @@ from tensorflow import keras
 import matplotlib.pyplot as plt
 
 # 网络加载
-network = keras.models.load_model('./LeNet-5-MNIST-Tensorflow/lenet_mnist.h5')
+network = keras.models.load_model('./TensorFlow/LeNet/firenet_mnist.h5')
 network.summary()
 
 # 读取数据集
