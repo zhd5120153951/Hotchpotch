@@ -72,6 +72,52 @@ def model_create(IMG_SHAPE=(224, 224, 3), class_num=10):
     return model
 
 
+# 构建FireNet模型的LED数字分类模型---模型比前面的深，但是参数量却是其1/20--因为失活层存在
+def FireNetModel_create(IMG_SHAPE=(224, 224, 3), class_num=10):
+    # 搭建模型
+    model = Sequential([
+        # 对模型做归一化的处理，将0-255之间的数字统一处理到0到1之间
+        layers.experimental.preprocessing.Rescaling(1. / 255, input_shape=IMG_SHAPE),
+
+        # 卷积层，该卷积层的输出为6个通道，卷积核的大小是5*5，激活函数为relu(为了非线性)
+        layers.Conv2D(6, (5, 5), activation='relu'),
+        # 添加池化层，池化的kernel大小是2*2
+        layers.MaxPooling2D(2, 2),
+        layers.Dropout(0.5),
+
+        # 卷积层，输出为16个通道，卷积核大小为7*7，激活函数为relu
+        layers.Conv2D(16, (7, 7), activation='relu'),
+        # 池化层，最大池化，对2*2的区域进行池化操作
+        layers.MaxPooling2D(2, 2),
+        layers.Dropout(0.5),
+
+        # 第三个卷积层
+        layers.Conv2D(32, (9, 9), activation='relu'),
+        layers.MaxPooling2D(2, 2),
+        layers.Dropout(0.5),
+
+        # 第四个卷积层
+        layers.Conv2D(64, (11, 11), activation='relu'),
+        layers.MaxPooling2D(2, 2),
+        layers.Dropout(0.5),
+
+        # 将二维的输出转化为一维
+        layers.Flatten(),
+        layers.Dense(256, activation='relu'),
+        layers.Dropout(0.2),
+        # The same 128 dense layers, and 10 output layers as in the pre-convolution example:
+        layers.Dense(128, activation='relu'),
+        # 通过softmax函数将模型输出为类名长度的神经元上，激活函数采用softmax对应概率值
+        layers.Dense(class_num, activation='softmax')
+    ])
+    # 输出模型信息
+    model.summary()
+    # 指明模型的训练参数，优化器为sgd优化器，损失函数为交叉熵损失函数
+    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    # 返回模型
+    return model
+
+
 # 展示训练过程的曲线
 def show_trainInfo(history):
     # 从history中提取模型训练集和验证集准确率信息和误差信息
@@ -97,7 +143,7 @@ def show_trainInfo(history):
     plt.ylabel('Cross Entropy')
     plt.title('Training and Validation Loss')
     plt.xlabel('epoch')
-    plt.savefig('./TensorFlow/LeNet/results_cnn.png', dpi=100)
+    plt.savefig('./TensorFlow/LeNet/results.png', dpi=100)
 
 
 def train(epochs):
@@ -108,11 +154,12 @@ def train(epochs):
                                                   64)
     print(class_names)
     # 加载模型
-    model = model_create(class_num=len(class_names))
+    model = FireNetModel_create(class_num=len(class_names))
+
     # 指明训练的轮数epoch，开始训练
     history = model.fit(train_data, validation_data=val_data, epochs=epochs)
     # todo 保存模型， 修改为你要保存的模型的名称
-    model.save("./TensorFlow/LeNet/cnn_model.h5")
+    model.save("./TensorFlow/LeNet/FireNet_Model.h5")
     # 记录结束时间
     end_time = time()
     run_time = end_time - begin_time
