@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 from read_data import *
 
+
 class RCNN:
     def __init__(self, time, K, p, numclass, is_training):
         self.time = time
@@ -16,7 +17,7 @@ class RCNN:
             #                     initializer=tf.contrib.layers.xavier_initializer_conv2d())
             # # biases = tf.get_variable('biases_r', [self.K],
             # #                          initializer=tf.random_normal_initializer())
-            conv1 = tf.layers.conv2d(X, self.K, kernel_size=(3, 3),padding='same',reuse=None, name='rcl')
+            conv1 = tf.layers.conv2d(X, self.K, kernel_size=(3, 3), padding='same', reuse=None, name='rcl')
             rcl1 = tf.add(conv1, X)
             bn1 = tf.contrib.layers.batch_norm(rcl1)
             #
@@ -24,20 +25,18 @@ class RCNN:
             rcl2 = tf.add(conv2, X)
             bn2 = tf.contrib.layers.batch_norm(rcl2)
             #
-            conv3 = tf.layers.conv2d(bn2, self.K, kernel_size=(3, 3),padding='same', reuse=True, name='rcl')
+            conv3 = tf.layers.conv2d(bn2, self.K, kernel_size=(3, 3), padding='same', reuse=True, name='rcl')
             rcl3 = tf.add(conv3, X)
             bn3 = tf.contrib.layers.batch_norm(rcl3)
 
             return bn3
 
-
     def buile_model(self, X, y):
 
         with tf.variable_scope('conv1'):
 
-            conv1 = tf.contrib.layers.conv2d(X, 192, kernel_size= (5, 5))
+            conv1 = tf.contrib.layers.conv2d(X, 192, kernel_size=(5, 5))
             output = tf.contrib.layers.batch_norm(conv1)
-
 
         for i in range(4):
             with tf.variable_scope('recurrent_conv_{}'.format(i)):
@@ -52,7 +51,8 @@ class RCNN:
         with tf.variable_scope('global_max_pooling'):
             H = np.shape(output)[1]
             W = np.shape(output)[2]
-            output = tf.reshape(tf.nn.max_pool(output, ksize=[1, H, W, 1], strides=[1, H, W, 1], padding='SAME'), [-1, self.K])
+            output = tf.reshape(tf.nn.max_pool(output, ksize=[1, H, W, 1], strides=[1, H, W, 1], padding='SAME'),
+                                [-1, self.K])
 
         with tf.variable_scope('softmax'):
             logits = tf.contrib.layers.fully_connected(output, self.numclass)
@@ -66,6 +66,5 @@ class RCNN:
             tf.summary.scalar('loss', loss)
             # tf.summary.histogram('histogram loss', loss)
             summary_op = tf.summary.merge_all()
-
 
         return loss, summary_op, acc, preds

@@ -6,13 +6,17 @@ from RCNN import *
 import datetime
 
 import argparse
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--gpu_id', type=int, default=0)
 args = parser.parse_args()
 
 gpu_id = args.gpu_id  # set GPU id to use
-import os; os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
+import os
+
+os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
 
 def main():
     log_dir = './logdir'
@@ -27,11 +31,11 @@ def main():
     X_raw, y_raw = getData(filename=file)
     n_train = X_raw.shape[0]
     y_raw[y_raw == 10] = 0
-    y_raw = np.reshape(y_raw, (n_train,))
+    y_raw = np.reshape(y_raw, (n_train, ))
 
     with tf.Session() as sess:
         X = tf.placeholder(tf.float32, shape=(None, 32, 32, 3))
-        y = tf.placeholder(tf.int32, shape=(None,))
+        y = tf.placeholder(tf.int32, shape=(None, ))
         rcnn = RCNN(time=3, K=192, p=0.9, numclass=10, is_training=True)
         loss, summary_op, acc, _ = rcnn.buile_model(X, y)
         optimizer = tf.train.AdamOptimizer(learning_rate=lr, beta1=0.9, beta2=0.98, epsilon=1e-8).minimize(loss)
@@ -51,16 +55,19 @@ def main():
             image = X_raw[index]
             labels = y_raw[index]
             # print(image.shape)
-            loss_batch, summary_op_batch, acc_batch, _ = sess.run([loss, summary_op, acc, optimizer], feed_dict={X:image, y:labels})
+            loss_batch, summary_op_batch, acc_batch, _ = sess.run([loss, summary_op, acc, optimizer],
+                                                                  feed_dict={
+                                                                      X: image,
+                                                                      y: labels
+                                                                  })
             loss_mean += loss_batch
             acc_mean += acc_batch
             if (n_iter + 1) % log_interval == 0 or (n_iter + 1) == max_iter:
-                loss_mean = loss_mean/(log_interval*1.0)
-                acc_mean = acc_mean/(log_interval*1.0)
+                loss_mean = loss_mean / (log_interval * 1.0)
+                acc_mean = acc_mean / (log_interval * 1.0)
                 batch_time = datetime.datetime.now()
-                print(
-                    "time: {},iter = {}\n\tloss = {}, accuracy (cur) = {} ".format(batch_time - start, n_iter + 1, loss_mean,
-                                                                                   acc_mean))
+                print("time: {},iter = {}\n\tloss = {}, accuracy (cur) = {} ".format(
+                    batch_time - start, n_iter + 1, loss_mean, acc_mean))
                 loss_mean = 0
                 acc_mean = 0
 
@@ -74,6 +81,7 @@ def main():
     end = datetime.datetime.now()
     print("sum time: {}".format(end - start))
     writer.close()
+
 
 if __name__ == '__main__':
     main()
