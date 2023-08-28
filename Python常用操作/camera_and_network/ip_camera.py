@@ -2,17 +2,14 @@ import time
 import multiprocessing as mp
 import cv2
 """
-https://github.com/Yonv1943/Python
-https://zhuanlan.zhihu.com/p/38136322
-OpenCV official demo
+多进程读取摄像头，多线程读取
 https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_gui/py_video_display/py_video_display.html
-海康、大华IpCamera RTSP地址和格式（原创，旧版）- 2014年08月12日 23:01:18 xiejiashu
+海康、大华IpCamera RTSP地址和格式(原创，旧版)
 rtsp_path_hikvison = "rtsp://%s:%s@%s/h265/ch%s/main/av_stream" % (user, pwd, ip, channel)
 rtsp_path_dahua = "rtsp://%s:%s@%s/cam/realmonitor?channel=%d&subtype=0" % (user, pwd, ip, channel)
 https://blog.csdn.net/xiejiashu/article/details/38523437
-最新（2017）海康摄像机、NVR、流媒体服务器、回放取流RTSP地址规则说明 - 2017年05月13日 10:51:46 xiejiashu
+最新（2017）海康摄像机、NVR、流媒体服务器、回放取流RTSP地址规则说明
 rtsp_path_hikvison = "rtsp://%s:%s@%s//Streaming/Channels/%d" % (user, pwd, ip, channel)
-https://blog.csdn.net/xiejiashu/article/details/71786187
 """
 
 

@@ -19,7 +19,8 @@ q = queue.Queue(maxsize=10)
 
 def ReadFrame():
     print("start Reveive")
-    cap = cv2.VideoCapture("rtsp://admin:jiankong123@192.168.23.10")
+    # cap = cv2.VideoCapture("rtsp://admin:jiankong123@192.168.23.10")
+    cap = cv2.VideoCapture("rtsp://admin:great123@192.168.8.204")
     ret, frame = cap.read()
     q.put(frame)
     while ret:

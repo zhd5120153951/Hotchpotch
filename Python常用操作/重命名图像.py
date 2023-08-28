@@ -1,6 +1,7 @@
 import os
 
 
+#重命名文件名
 def rename_files(folder_path, new_name_prefix):
     """
     将文件夹中的文件按照给定前缀和序号进行批量重命名。
@@ -29,6 +30,20 @@ def rename_files(folder_path, new_name_prefix):
         start_number += 1
 
     print("rename file successfully")
+
+
+#重命名后缀为jpg文件
+def rename_Img(path_orig, path_dst):
+    imgList = os.listdir(path_orig)
+    for img in imgList:
+        if img.endswith(".jpg"):
+            name = img.split(".", 3)[0] + "." + img.split(".", 3)[1]
+            src = os.path.join(os.path.abspath(path_orig), img)
+            dst = os.path.join(os.path.abspath(path_dst), name + ".jpg")
+            try:
+                os.rename(src, dst)
+            except:
+                continue
 
 
 if __name__ == "__main__":
