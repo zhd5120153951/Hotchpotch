@@ -39,6 +39,6 @@ if __name__ == "__main__":
 
     lr_ls = LR_LS()
     lr_ls.train(x, y)
-    print("估计的参数值：%s" % (lr_ls.w))
+    print("估计的参数值：%s" % (lr_ls.w))  #训练后得到的权重
     x_test = np.array([2, 4, 5]).reshape(1, -1)
     print("预测值为: %s" % (lr_ls.predict(x_test)))

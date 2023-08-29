@@ -35,9 +35,11 @@ class LinearRegess():
 
 
 if __name__ == '__main__':
+    #随机生成500组数据
     np.random.seed(1234)
     x = np.random.rand(500, 3)
-    y = x.dot(np.array([4.2, 5.7, 10.8]))
+    y = x.dot(np.array([4.2, 5.7, 10.8]))  #初始化三个权重
+    # y = x.dot(np.array(np.random.rand(3)))
 
     linear = LinearRegess(x, y)
     linear.train()

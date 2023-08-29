@@ -17,7 +17,7 @@ class LR_GD():
     def __init__(self):
         self.w = None
 
-    def train(self, X, y, alpha=0.002, loss=1e-10):  # 设定步长为0.002,判断是否收敛的条件为1e-10
+    def train(self, X, y, alpha=0.0002, loss=1e-10):  # 设定步长为0.002,判断是否收敛的条件为1e-10
         y = y.reshape(-1, 1)  #重塑y值的维度以便矩阵运算
         [m, d] = np.shape(X)  #自变量的维度
         self.w = np.zeros((d))  #将参数的初始值定为0
@@ -48,6 +48,6 @@ if __name__ == "__main__":
 
     lr_gd = LR_GD()
     lr_gd.train(x, y)
-    print("估计的参数值为：%s" % (lr_gd.w))
+    print("估计的参数值为：%s" % (lr_gd.w))  #训练后得到的权重
     x_test = np.array([2, 4, 5]).reshape(1, -1)
     print("预测值为：%s" % (lr_gd.predict(x_test)))
