@@ -13,7 +13,7 @@ def rename_files(folder_path, new_name_prefix):
     返回:
         - None
     """
-    start_number = 2498
+    start_number = 1
     # 遍历文件夹中的文件
     for filename in os.listdir(folder_path):
         print(filename)
@@ -46,7 +46,36 @@ def rename_Img(path_orig, path_dst):
                 continue
 
 
+def selectBySuffiex(jpgPath, txtPath, new_name_prefix):
+    imgList = os.listdir(jpgPath)
+    txtList = os.listdir(txtPath)
+    start_number = 618
+    for img in imgList:
+        # 构建新文件名
+        file_ext_jpg = os.path.splitext(img)[1]  # 获取文件扩展名
+        for txt in txtList:
+            file_ext_txt = os.path.splitext(txt)[1]
+            if os.path.splitext(img)[0] == os.path.splitext(txt)[0]:  #同名
+                new_filename = f"{new_name_prefix}{start_number:05d}{file_ext_jpg}"  # 使用5位序号，并在左侧补0
+                new_txtname = f"{new_name_prefix}{start_number:05d}{file_ext_txt}"
+                # 构建文件的完整路径
+                old_filepath = os.path.join(jpgPath, img)
+                new_filepath = os.path.join(jpgPath, new_filename)
+                old_txtpath = os.path.join(txtPath, txt)
+                new_txtpath = os.path.join(txtPath, new_txtname)
+                # 重命名文件
+                os.rename(old_filepath, new_filepath)
+                os.rename(old_txtpath, new_txtpath)
+                start_number += 1
+            else:
+                continue
+
+
 if __name__ == "__main__":
-    folder_path = 'D:\\FilePackage\\datasets\\Object Detect\\fire\\images\\val'
-    new_name_prefix = 'fire_'
+    # folder_path = 'D:\\FilePackage\\datasets\\Object Detect\\fire\\images\\val'
+    folder_path = 'D:\\FilePackage\\datasets\\Object Detect\\fire\\images\\train\\背景图'
+    # jpgPath = 'D:\\FilePackage\\datasets\\Object Detect\\fire\\images\\train\\955'
+    # txtPath = 'D:\\FilePackage\\datasets\\Object Detect\\fire\\labels\\val\\955'
+    new_name_prefix = 'bg_'
     rename_files(folder_path, new_name_prefix)
+    # selectBySuffiex(jpgPath, txtPath, new_name_prefix)
