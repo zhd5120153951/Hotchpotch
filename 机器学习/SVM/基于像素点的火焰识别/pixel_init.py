@@ -3,7 +3,6 @@ import cv2
 import time
 import pandas as pd
 import joblib
-import argparse
 
 
 def load_data(feature_file, mark):
@@ -16,9 +15,9 @@ def load_data(feature_file, mark):
 
 
 def model_train(model_name="GaussianNB"):
-    feature0 = load_data("images/data/fire.txt", 1)  #fire
-    feature1 = load_data("images/data/nofire.txt", 0)  #nofire--背景
-    feature = np.array(np.concatenate([feature0, feature1], axis=0), dtype=np.uint8)
+    featurefire = load_data("images/data/fire.txt", 1)  #fire
+    featurenofire = load_data("images/data/nofire.txt", 0)  #nofire--背景
+    feature = np.array(np.concatenate([featurefire, featurenofire], axis=0), dtype=np.uint8)
     #feature = pd.DataFrame(np.array(np.concatenate([feature0, feature1], axis = 0), dtype=np.uint8))
     #feature[0], feature[3] = feature[3], feature[0]
     #feature.to_csv("out.csv", index=False)
@@ -40,7 +39,7 @@ def model_train(model_name="GaussianNB"):
     result = model.predict(datatest0)
     count = (labeltest0 == result).sum()
     correct_rate = count / len(datatest0)
-    print("label 0 test correct_rate ", correct_rate)
+    print("label 0 test correct_rate ", correct_rate)  #背景
 
     test1 = load_data("./images/data/testnofire.txt", 0)
     datatest1 = test1[:, :-1]
@@ -48,10 +47,10 @@ def model_train(model_name="GaussianNB"):
     result = model.predict(datatest1)
     count = (labeltest1 == result).sum()
     correct_rate = count / len(datatest1)
-    print("label 1 test correct_rate ", correct_rate)
+    print("label 1 test correct_rate ", correct_rate)  #火焰
 
 
-def model_predict(model_name="GaussianNB", pic_name='images/test/3.jpg'):
+def model_predict(model_name="GaussianNB", pic_name='images/test/790/3.jpg'):
 
     model2 = joblib.load(f'./images/models/{model_name}.pkl')
     test_img = cv2.imread(pic_name)
@@ -93,7 +92,7 @@ def model_predict(model_name="GaussianNB", pic_name='images/test/3.jpg'):
     for contour in contours:
         area = cv2.contourArea(contour)
         print(area)
-        if area >= 600:
+        if area >= 60:
             print('fire')
             cv2.drawContours(test_img, contour, -1, (0, 255, 0), 1)
             cv2.imshow('draw', test_img)
@@ -109,22 +108,3 @@ def model_predict(model_name="GaussianNB", pic_name='images/test/3.jpg'):
     cv2.imwrite(f"./images/tmp/{model_name}_restmp.jpg", pixelclassify)
 
     cv2.waitKey(0)
-
-
-def parse_opt(known=False):
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--model_name', nargs='+', default=['SVC'], help='SVC')
-    args = parser.parse_args()
-    print(args)
-    return args
-
-
-if __name__ == "__main__":
-    args = parse_opt()
-
-    model_name = args.model_name[0]
-
-    #job 1 train the pixels
-    # model_train(model_name)
-    #job 2 test the job2's model
-    model_predict(model_name)

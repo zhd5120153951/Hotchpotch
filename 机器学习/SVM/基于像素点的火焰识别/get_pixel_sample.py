@@ -37,7 +37,7 @@ def click_event(event, x, y, flags, img):
             f.writelines("\n")
 
 
-def get_points(pic_path='lutangPic/train/fire/Bo016845.jpg'):
+def get_points(pic_path=''):
     cv2.namedWindow('image', 0)
     img = cv2.imread(pic_path)
     cv2.imshow('image', img)
