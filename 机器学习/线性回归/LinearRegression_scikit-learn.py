@@ -17,7 +17,7 @@ from sklearn.preprocessing import StandardScaler  #引入归一化的包
 
 def linearRegression():
     print(u"加载数据...\n")
-    data = loadtxtAndcsv_data("./机器学习/线性回归/LinearRegression/data.txt", ",", np.float64)  #读取数据
+    data = loadtxtAndcsv_data("./机器学习/线性回归/data.txt", ",", np.float64)  #读取数据
     X = np.array(data[:, 0:-1], dtype=np.float64)  # X对应0到倒数第2列
     y = np.array(data[:, -1], dtype=np.float64)  # y对应最后一列
 

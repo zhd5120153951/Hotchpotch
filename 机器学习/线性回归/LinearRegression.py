@@ -20,7 +20,7 @@ font = FontProperties(fname=r"c:\\windows\\fonts\\simsun.ttc", size=14)  # 解�
 def linearRegression(alpha=0.01, num_iters=400):
     print(u"加载数据...\n")
 
-    data = loadtxtAndcsv_data("./机器学习/线性回归/LinearRegression/data.txt", ",", np.float64)  #读取数据
+    data = loadtxtAndcsv_data("./机器学习/线性回归/data.txt", ",", np.float64)  #读取数据
     #X此时为python数据结构中的数据类型--不是numpy类型--无法做矩阵运算
     X = data[:, 0:-1]  # X对应0到倒数第2列--0:-1==0:2-->不过用0:-1通用性更好--因为要剥离出最后一列，其余为X
     #存储形式[[x11,x12],[x21,x22],[x31,x32],...,[x471,x472]]
