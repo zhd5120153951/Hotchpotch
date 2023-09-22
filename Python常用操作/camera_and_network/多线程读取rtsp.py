@@ -1,7 +1,7 @@
 '''
 @FileName   :多线程读取rtsp.py
 @Description:
-@Date       :2023/08/24 17:01:33
+@Date       :2022/08/24 17:01:33
 @Author     :daito
 @Website    :Https://github.com/zhd5120153951
 @Copyright  :daito

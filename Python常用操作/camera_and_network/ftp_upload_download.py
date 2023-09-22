@@ -1,16 +1,15 @@
+'''
+@FileName   :ftp_upload_download.py
+@Description:linux平台
+@Date       :2022/09/22 15:58:58
+@Author     :daito
+@Website    :Https://github.com/zhd5120153951
+@Copyright  :daito
+@License    :None
+@version    :1.0
+@Email      :2462491568@qq.com
+'''
 import ftplib
-
-"""
-Source: Yonv1943 2019-05-04
-https://github.com/Yonv1943/Python
-https://zhuanlan.zhihu.com/p/64534116
-
-Python ftplib Tutorial
-https://pythonprogramming.net/ftp-transfers-python-ftplib/
-
-Read FTP files without writing them using Python.
-https://stackoverflow.com/a/11209373/9293137
-"""
 
 
 def download_file(filename):
