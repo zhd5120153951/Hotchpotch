@@ -17,6 +17,10 @@ class People(object):
         self.age = age
         return
 
+    """
+    总结：当使用print输出对象的时候，只要自己定义了__str__(self)方法，那么就会打印从在这个方法中return的数据。__str__方法需要返回一个字符串，当做这个对象的描写。
+    """
+
     def __str__(self):
         return self.name + ":" + str(self.age)
 
@@ -42,6 +46,15 @@ class FirstMagicMothod:
 class CLanguage:
     def __init__(self, name, add):
         print(name, "sdf", add)
+        self.name = name
+        self.add = add
+
+    """
+    __repr__() 方法是类的实例化对象用来做“自我介绍”的方法，默认情况下，它会返回当前对象的“类名+object at+内存地址”，而如果对该方法进行重写，可以为其制作自定义的自我描述信息。
+    """
+
+    def __repr__(self) -> str:
+        return "CLanguage = " + self.name + self.add
 
 
 ###未完...
@@ -57,4 +70,5 @@ if __name__ == "__main__":
     print(ret.url)
     ret.speak("实例方法")
 
-    add = CLanguage("adad", "dwrr")
+    CL = CLanguage("adad", "dwrr")
+    print(CL)
