@@ -1,7 +1,7 @@
 '''
 @FileName   :__init__函数通俗解释.py
 @Description:
-@Date       :2020s/09/28 11:29:57
+@Date       :2020/09/28 11:29:57
 @Author     :daito
 @Website    :Https://github.com/zhd5120153951
 @Copyright  :daito
@@ -57,6 +57,7 @@ class CLanguage:
         return "CLanguage = " + self.name + self.add
 
 
+# __repr__和__str__这两个方法都是用于显示的，__str__是面向用户的，而__repr__面向程序员。
 ###未完...
 
 if __name__ == "__main__":
