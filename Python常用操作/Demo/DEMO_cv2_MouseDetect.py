@@ -1,11 +1,9 @@
 import os
 import cv2
 import numpy as np
-
 """Github YonV1943
 Mouse detection for SIAT
 """
-
 """utils"""
 
 
@@ -178,7 +176,10 @@ def find_3pairs_lines(lines):
     return res
 
 
-def find_mouse__cnt_pnt(img, mask, ):
+def find_mouse__cnt_pnt(
+    img,
+    mask,
+):
     mask_img = img[:, :, 0] * mask + (1 - mask) * 255
     mask_img = mask_img.astype(np.uint8)
     mask_img = cv2.blur(mask_img, (5, 5))
@@ -220,7 +221,7 @@ def where_is_the_mouse(mask3, pnt):
 
 
 def get_interest_mask(img='./test01.png'):
-    cv2.namedWindow('', cv2.WINDOW_GUI_NORMAL)
+    cv2.namedWindow('get_interest_mask', cv2.WINDOW_GUI_NORMAL)
     wait_time = 234
     max_line_num = 64
 
@@ -237,7 +238,6 @@ def get_interest_mask(img='./test01.png'):
     show = expand_grey_to_rgb(edges)
     cv2.imshow('', show)
     cv2.waitKey(wait_time)
-
     """cv2.HoughLines()
     rho: the pixel width of the line
     theta: the angle of the line
@@ -260,14 +260,14 @@ def get_interest_mask(img='./test01.png'):
     cv2.waitKey(wait_time)
 
     lines2 = list()
-    min_distance = 0.1 ** 2
+    min_distance = 0.1**2
     rho_norm_k = np.pi / img_w
     for rho1, theta1 in lines1:
         rho_norm1 = rho1 * rho_norm_k
         is_add = True
         for rho2, theta2 in lines2:
             rho_norm2 = rho2 * rho_norm_k
-            distance = (rho_norm2 - rho_norm1) ** 2 + (theta2 - theta1) ** 2
+            distance = (rho_norm2 - rho_norm1)**2 + (theta2 - theta1)**2
             if distance < min_distance:
                 is_add = False
                 break
@@ -284,8 +284,9 @@ def get_interest_mask(img='./test01.png'):
     cv2.imshow('', show)
     cv2.waitKey(wait_time)
 
-    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
-              '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+    colors = [
+        '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'
+    ]
 
     the_3pairs_lines = find_3pairs_lines(lines3)
     show = img.copy()
@@ -311,9 +312,11 @@ def get_interest_mask(img='./test01.png'):
     cv2.waitKey(wait_time)
 
     the_4p_3lines = [((item[2], item[3]), (item[4], item[5])) for item in the_3lines]
-    three_point = [line_intersection(the_4p_3lines[0], the_4p_3lines[1]),
-                   line_intersection(the_4p_3lines[0], the_4p_3lines[2]),
-                   line_intersection(the_4p_3lines[1], the_4p_3lines[2]), ]
+    three_point = [
+        line_intersection(the_4p_3lines[0], the_4p_3lines[1]),
+        line_intersection(the_4p_3lines[0], the_4p_3lines[2]),
+        line_intersection(the_4p_3lines[1], the_4p_3lines[2]),
+    ]
     mid_point = np.mean(three_point, axis=0).astype(np.int)
     print(f'; find the mid_point: {mid_point}')
 
@@ -365,8 +368,7 @@ def run__pipeline(video_path):
     # video_path = "D:\\Download\\ymaze-pmq\\14# 00_00_03.20-00_08_03.20.avi"
     video_cap = cv2.VideoCapture(video_path)
 
-    cv2.namedWindow('', cv2.WINDOW_GUI_NORMAL)
-
+    cv2.namedWindow('run_pipeline', cv2.WINDOW_GUI_NORMAL)
     """get the first frame"""
     is_opened, frame = video_cap.read()
     mask, mask3, width = get_interest_mask(img=frame)
@@ -432,6 +434,7 @@ def run__pipeline(video_path):
 
 if __name__ == '__main__':
     for file_avi in [n for n in os.listdir('.') if n[-4:] == '.avi']:
+        print(len(file_avi))
         run__pipeline(file_avi)
     # run__pipeline(video_path)
     # get_interest_mask(img='test05.jpg')

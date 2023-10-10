@@ -2,15 +2,14 @@ import numpy.random as rd
 
 import torch
 import torch.nn as nn
-
 '''input 1D'''
 
 
 class Res1dNet(nn.Module):
     def __init__(self):
         super(Res1dNet, self).__init__()
-        inp_dim = 28 ** 2
-        mid_dim = int(2 ** 6 * 1.5)
+        inp_dim = 28**2
+        mid_dim = int(2**6 * 1.5)
         out_dim = 10
 
         self.dropout = nn.Dropout(p=0.25)
@@ -47,8 +46,8 @@ class Res1dNet(nn.Module):
 class FCNet(nn.Module):
     def __init__(self, inp_dim=3, mid_dim=128, glb_size=6):
         super().__init__()
-        inp_dim = 32 ** 2 * inp_dim
-        mid_dim = 2 ** 8
+        inp_dim = 32**2 * inp_dim
+        mid_dim = 2**8
         out_dim = 10
 
         self.dropout = nn.Dropout(p=0.25)
@@ -68,8 +67,8 @@ class FCNet(nn.Module):
 class Dense1dNet(nn.Module):
     def __init__(self):
         super(Dense1dNet, self).__init__()
-        inp_dim = 28 ** 2
-        mid_dim = int(2 ** 6)
+        inp_dim = 28**2
+        mid_dim = int(2**6)
         out_dim = 10
         self.flatten = NnnReshape((-1, inp_dim))
         self.dropout = nn.Dropout(p=0.25)
@@ -108,11 +107,11 @@ class Dense1dNet(nn.Module):
 class SE1dNet(nn.Module):
     def __init__(self):
         super(SE1dNet, self).__init__()
-        inp_dim = 28 ** 2
+        inp_dim = 28**2
         self.dropout = nn.Dropout(p=0.25)
         self.flatten = NnnReshape((-1, inp_dim))
 
-        self.dense0 = nn_linear_bn(28 ** 2, 96, bias=True)
+        self.dense0 = nn_linear_bn(28**2, 96, bias=True)
         self.se0 = nn_se_1d(96)
         self.dense1 = nn_linear_bn(96, 192, bias=False)
         self.se1 = nn_se_1d(192)
@@ -150,14 +149,12 @@ class ConvNet(nn.Module):  # Conv2d
         self.net = nn.Sequential(
             nn.Conv2d(inp_dim, 32, 3, 1, padding=0, bias=True),
             nn.ReLU(),
-
             nn_conv2d_avg2(32, 32, 3, 1, padding=0, bias=True),
             nn_conv2d_avg2(32, 48, 3, 1, padding=0, bias=True),
 
             # nn.BatchNorm2d(48),
             nn.Conv2d(48, mid_dim, global_size, 1, padding=0, bias=True),
             nn.Hardswish(),
-
             NnnReshape((-1, mid_dim)),
             # nn.BatchNorm1d(mid_dim),
             nn.Linear(mid_dim, mid_dim, bias=True),
@@ -184,19 +181,15 @@ class ConvNetBatchNorm(nn.Module):
         self.net = nn.Sequential(
             nn.Conv2d(inp_dim, 32, 3, 1, padding=0, bias=True),
             nn.ReLU(),
-
             nn_conv2d_bn_avg2(32, 32, 3, 1, padding=0, bias=True),
             nn_conv2d_bn_avg2(32, 48, 3, 1, padding=0, bias=True),
-
             nn.BatchNorm2d(48),
             nn.Conv2d(48, mid_dim, global_size, 1, padding=0, bias=True),
             nn.Hardswish(),
-
             NnnReshape((-1, mid_dim)),
             nn.BatchNorm1d(mid_dim),
             nn.Linear(mid_dim, mid_dim, bias=True),
             nn.Hardswish(),
-
             nn.BatchNorm1d(mid_dim),
             self.dropout,
             nn.Linear(mid_dim, 10, bias=True),
@@ -286,7 +279,6 @@ class SENetBatchNorm(nn.Module):  # Squeeze-and-Excitation Network
             nn.BatchNorm1d(mid_dim),
             nn.Linear(mid_dim, mid_dim, bias=True),
             nn.Hardswish(),
-
             nn.BatchNorm1d(mid_dim),
             self.dropout,
             nn.Linear(mid_dim, 10, bias=True),

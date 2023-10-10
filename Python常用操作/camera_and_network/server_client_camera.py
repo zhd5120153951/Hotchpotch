@@ -1,9 +1,19 @@
+'''
+@FileName   :server_client_camera.py
+@Description:
+@Date       :2022/10/10 15:52:00
+@Author     :daito
+@Website    :Https://github.com/zhd5120153951
+@Copyright  :daito
+@License    :None
+@version    :1.0
+@Email      :2462491568@qq.com
+'''
 import multiprocessing as mp
 import cv2
 import time
 import pickle
 import gzip
-
 """
 Source: Yonv1943 2019-05-04
 https://github.com/Yonv1943/Python
@@ -38,7 +48,6 @@ def client_img_get(q, window_name, host, port):
 
     from multiprocessing.connection import Client
     client = Client((host, port))
-
     '''init'''
     frame = q.get()
     shape = tuple([i // 3 for i in frame.shape[:2][::-1]])  # (1080P)
@@ -90,7 +99,6 @@ def run_server(host, port):
         frame = conn.recv()
         # frame = gzip.decompress(frame)
         frame = pickle.loads(frame)
-
         '''data = image_processing(data)'''
         # time.sleep(0.5)
         # cv2.imshow('ImgShow', data)
@@ -105,13 +113,11 @@ if __name__ == '__main__':
     server_host = '10.10.1.111'  # host = 'localhost'
     server_port = 32928  # if [Address already in use], use another port
 
-
     def get_ip_address(remote_server="8.8.8.8"):
         import socket
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect((remote_server, 80))
         return s.getsockname()[0]
-
 
     if get_ip_address() == server_host:
         run_server(server_host, server_port)  # first, run this function only in server

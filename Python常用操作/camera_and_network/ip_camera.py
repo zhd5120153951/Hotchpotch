@@ -138,7 +138,7 @@ def run_multi_camera_in_a_window():
     ]
 
     mp.set_start_method(method='spawn')  # init
-    queues = [mp.Queue(maxsize=4) for _ in camera_ip_l]
+    queues = [mp.Queue(maxsize=4) for _ in camera_ip_l]  #为每个摄像头IP分配一个队列queue
 
     processes = [mp.Process(target=image_collect, args=(queues, camera_ip_l))]
     for queue, camera_ip in zip(queues, camera_ip_l):

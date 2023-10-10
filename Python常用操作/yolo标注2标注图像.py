@@ -17,11 +17,11 @@ from pathlib import Path
 import pandas as pd
 import cv2
 
-alphabet = ['car', 'person']
+alphabet = ['person', 'bicycle', 'car']
 
-label_root = Path("D://FilePackage//datasets//train//labels")  # 替换为实际的标注文件夹路径
-image_root = Path("D://FilePackage//datasets//train//images")  # 替换为实际的图像文件夹路径
-output_root = Path("D://FilePackage//datasets//train//yolo2img")  # 替换为实际的输出文件夹路径
+label_root = Path("D://FilePackage//datasets//flir_v1_3_8862//val//labels")  # 替换为实际的标注文件夹路径
+image_root = Path("D://FilePackage//datasets//flir_v1_3_8862//val//images")  # 替换为实际的图像文件夹路径
+output_root = Path("D://FilePackage//datasets//flir_v1_3_8862//yolo2img")  # 替换为实际的输出文件夹路径
 
 
 def paint(label_file, image_file, output_file):
@@ -34,9 +34,11 @@ def paint(label_file, image_file, output_file):
         img = cv2.imread(str(image_file))
         h, w = img.shape[:2]
 
+        #作用是把df[['center-x','w']]对应的值(txt中)--传到x,并x*w,最后覆盖到df[['center-x','w']]的值
+        #简单说就是把x,y,w,h由比例--数值
         df[['center-x', 'w']] = df[['center-x', 'w']].apply(lambda x: x * w)
         df[['center-y', 'h']] = df[['center-y', 'h']].apply(lambda x: x * h)
-
+        #画框需要知道左上,右下坐标
         df['x1'] = df['center-x'] - df['w'] / 2
         df['x2'] = df['center-x'] + df['w'] / 2
         df['y1'] = df['center-y'] - df['h'] / 2
@@ -63,6 +65,6 @@ output_image_folder.mkdir(parents=True, exist_ok=True)
 
 # 遍历标注文件夹中的所有txt文件
 for label_file in label_root.glob("*.txt"):
-    image_file = image_root / (label_file.stem + ".jpg")
+    image_file = image_root / (label_file.stem + ".jpeg")
     output_image_file = output_image_folder / (label_file.stem + ".jpg")
     paint(label_file, image_file, output_image_file)
