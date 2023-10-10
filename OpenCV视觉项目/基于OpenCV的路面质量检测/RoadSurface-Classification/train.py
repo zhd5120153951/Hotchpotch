@@ -34,14 +34,14 @@ tf.random.set_seed(2)
 batch_size = 64
 
 #Prepare input data
-classes = os.listdir('training_data')
+classes = os.listdir('E:\\Source\\Github\\datasets\\roadsurface-classification\\training_data')
 num_classes = len(classes)
 
 # 20% of the data will automatically be used for validation
 validation_size = 0.2
 img_size = 256  #128
 num_channels = 3
-train_path = 'training_data'
+train_path = 'E:\\Source\\Github\\datasets\\roadsurface-classification\\training_data'
 
 # We shall load all the training and validation images and labels into memory using openCV and use that during training
 data = dataset.read_train_sets(train_path, img_size, classes, validation_size=validation_size)
@@ -200,7 +200,7 @@ def train(num_iteration):
     total_iterations += num_iteration
 
 
-train(num_iteration=6000)
+train(num_iteration=1200)
 
 #os.system('spd-say -t male3 "I have finished my training. Lets do it!"')
 print('\a')

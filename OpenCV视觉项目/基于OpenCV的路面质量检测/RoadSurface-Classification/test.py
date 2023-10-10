@@ -51,7 +51,8 @@ y_pred = graph.get_tensor_by_name("y_pred:0")
 #
 x = graph.get_tensor_by_name("x:0")
 y_true = graph.get_tensor_by_name("y_true:0")
-y_test_images = np.zeros((1, len(os.listdir('training_data'))))
+y_test_images = np.zeros(
+    (1, len(os.listdir('E:\\Source\\Github\\datasets\\roadsurface-classification\\training_data'))))
 
 while cv.waitKey(1) < 0:
 
