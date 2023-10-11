@@ -154,7 +154,7 @@ def run_multi_camera_in_a_window():
 def run():
     # run_opencv_camera()  # slow, with only 1 thread
     # run_single_camera()  # quick, with 2 threads
-    # run_multi_camera()  # with 1 + n threads
+    run_multi_camera()  # with 1 + n threads
     run_multi_camera_in_a_window()  # with 1 + n threads
     pass
 

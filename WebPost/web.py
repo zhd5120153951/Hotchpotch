@@ -8,6 +8,7 @@ import numpy as np
 
 # flask格式
 app = Flask(__name__)
+
 CORS(app, supports_credentials=True)
 # 解决浏览器输出乱码问题
 app.config['JSON_AS_ASCII'] = False
