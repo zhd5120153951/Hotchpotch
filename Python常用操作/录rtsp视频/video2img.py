@@ -15,8 +15,10 @@ import threading
 from threading import Lock, Thread
 
 #传入的视频路径和输出图像路径
-video_path = 'C:\\Users\\Zengh\\AppData\\Local\\WebBrowser-Plugin\\VMSClient\\Record'
-img_path = 'C:\\Users\\Zengh\\AppData\\Local\\WebBrowser-Plugin\\VMSClient\\Record\\img'
+# video_path = 'C:\\Users\\Zengh\\AppData\\Local\\WebBrowser-Plugin\\VMSClient\\Record'
+video_path = 'E:\\temp\\img\\'
+# img_path = 'C:\\Users\\Zengh\\AppData\\Local\\WebBrowser-Plugin\\VMSClient\\Record\\img'
+img_path = 'E:\\temp\\img'
 filelist = os.listdir(video_path)
 
 
@@ -35,7 +37,7 @@ def video2img(filename):
 
         # width = frame.shape[1]
         # height = frame.shape[0]
-        if (cnt % 12) == 0:  #每隔25帧取一张图
+        if (cnt % 25) == 0:  #每隔25帧取一张图
             cv2.imwrite(img_path + '\\' + str(dnt) + '_.jpg', frame)
             dnt += 1
             # cv2.imencode('.jpg', frame[1].tofile(img_path + str(filename) + '\\' + str(dnt) + '.jpg'))
