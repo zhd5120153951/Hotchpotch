@@ -11,7 +11,7 @@
   <div id="Header">
     <div class="top-left-edition">
       <span style="color: #21b3b9; font-weight: bold">
-        <i class="el-icon-star-off" style="font-size: 40px; float: left;">基于YoloV5的人流量监测系统</i>
+        <i class="el-icon-star-off" style="font-size: 40px; float: left;">基于Flask-Vue-yolo的PC部署</i>
       </span>
     </div>
 

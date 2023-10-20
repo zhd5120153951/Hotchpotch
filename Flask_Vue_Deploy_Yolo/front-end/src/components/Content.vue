@@ -251,9 +251,10 @@
 
 <script>
 import axios from "axios";
-import { randomBytes } from "crypto";
+/*import { randomBytes } from "crypto";*/ //zhd
 import JsonViewer from "vue-json-viewer";
-/* import CameraVue from './Camera.vue';测试用，废弃
+/* 
+import CameraVue from './Camera.vue';测试用，废弃
  */
 export default {
   name: "Content",
@@ -328,7 +329,7 @@ export default {
       this.active++;
     },
     handleChange(value) {
-        console.log(value);
+      console.log(value);
     },
 
     // 获得目标文件
@@ -413,7 +414,7 @@ export default {
     },
     drawChart() {},
     notice1() {
-      const h = this.$createElement;
+      /*const h = this.$createElement;*/ //zhd
       this.$notify({
         title: "检测完成",
         message: "点击图片可以查看大图",
@@ -498,7 +499,7 @@ export default {
             _this.thisVideo.play()
           }
         }).catch(err => {
-          console.log(err)
+            console.log(err)
         })
       },
       //  绘制图片（拍照功能）

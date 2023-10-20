@@ -10,7 +10,7 @@
 # 存在问题【暂无】
 
 import datetime
-import logging as rel_log
+import logging
 import os
 import shutil
 from datetime import timedelta
@@ -26,6 +26,11 @@ import math
 #为方便打包，路径引用方式改为自动获取
 import os
 import sys
+#日志
+logging.basicConfig(filename='./WebPost/serverApp.log',
+                    level=logging.DEBUG,
+                    format='%(asctime)s-%(levelname)s-%(message)s')
+
 PROJECT_DIR = os.path.dirname(__file__)
 if getattr(sys, 'frozen', False):
     # 如果是 PyInstaller 打包的应用程序，则获取静态文件夹的路径
@@ -74,15 +79,16 @@ def upload_file():
     if file and allowed_file(file.filename):
         src_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         file.save(src_path)
-        shutil.copy(src_path, PROJECT_DIR+'/tmp/original')
-        image_path = os.path.join(PROJECT_DIR+'/tmp/original', file.filename)
-        pid, image_info = core.main.c_main(
-            image_path, current_app.model, file.filename.rsplit('.', 1)[1])
-        delete_file(file.filename)#调用删除文件上传缓存接口，避免文件多次存储导致浪费资源
-        return jsonify({'status': 1,
-                        'image_url': 'http://127.0.0.1:5003/tmp/original/' + pid,
-                        'draw_url': 'http://127.0.0.1:5003/tmp/draw/' + pid,
-                        'image_info': image_info})
+        shutil.copy(src_path, PROJECT_DIR + '/tmp/original')
+        image_path = os.path.join(PROJECT_DIR + '/tmp/original', file.filename)
+        pid, image_info = core.main.c_main(image_path, current_app.model, file.filename.rsplit('.', 1)[1])
+        delete_file(file.filename)  #调用删除文件上传缓存接口，避免文件多次存储导致浪费资源
+        return jsonify({
+            'status': 1,
+            'image_url': 'http://127.0.0.1:5003/tmp/original/' + pid,
+            'draw_url': 'http://127.0.0.1:5003/tmp/draw/' + pid,
+            'image_info': image_info
+        })
 
     return jsonify({'status': 0})
 
@@ -97,7 +103,8 @@ def upload_file():
 # 删除文件上传缓存接口【已启用】2023-1-1
 # 避免文件多次存储导致浪费资源
 def delete_file(filename):
-    os.remove(app.config['UPLOAD_FOLDER']+'/'+filename)
+    os.remove(app.config['UPLOAD_FOLDER'] + '/' + filename)
+
 
 # 测试数据库存储/展示功能【已验证】2023-3-10
 # 修改新功能，展示之前监测数据，接口已开启，2023-3-12
@@ -107,8 +114,8 @@ def testdb():
     db = SQLManager()
     show_data_db = db.get_list('select * from imginfo ')
     db.close()
-    return jsonify({'status': 1,
-                    'historical_data': show_data_db})
+    return jsonify({'status': 1, 'historical_data': show_data_db})
+
 
 # 获取testoverview数据
 @app.route('/testdbow', methods=['GET', 'POST'])
@@ -116,8 +123,8 @@ def testdbow():
     db = SQLManager()
     show_data_ow_db = db.get_list('select * from testoverview ')
     db.close()
-    return jsonify({'status': 1,
-                    'testoverview': show_data_ow_db})
+    return jsonify({'status': 1, 'testoverview': show_data_ow_db})
+
 
 # 早期测试功能移入testdb1()，已启用2023-3-13
 @app.route('/testdb1', methods=['GET', 'POST'])
@@ -127,17 +134,19 @@ def testdb1():
     db.close()
     return render_template('testdb.html', show_data_db1=show_data_db1)
 
+
 #把字典数据重整为字符串【未完成废弃，直接采用原始数据】
 def convertdata(image_info):
     str = image_info
     return str
+
 
 # 原始图片和检测结果图片展示
 @app.route('/tmp/<path:file>', methods=['GET'])
 def show_photo(file):
     if request.method == 'GET':
         if not file is None:
-            image_data = open(PROJECT_DIR+f'/tmp/{file}', "rb").read()
+            image_data = open(PROJECT_DIR + f'/tmp/{file}', "rb").read()
             response = make_response(image_data)
             response.headers['Content-Type'] = 'image/png'
             return response

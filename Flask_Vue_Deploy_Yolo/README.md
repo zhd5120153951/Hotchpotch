@@ -120,7 +120,7 @@ def testdb():
                     'historical_data': show_data_db})
 ```
 
-# 5. 前端部署（开发）：
+# 5. 前端部署(开发)：
 
 【[Content.vue](https://github.com/Dovahkiin-Ming/Personnel-Flow-Monitoring-System-based-on-YoloV5/blob/beta/front-end/src/components/Content.vue)】
 
