@@ -26,10 +26,6 @@ import math
 #为方便打包，路径引用方式改为自动获取
 import os
 import sys
-#日志
-logging.basicConfig(filename='./WebPost/serverApp.log',
-                    level=logging.DEBUG,
-                    format='%(asctime)s-%(levelname)s-%(message)s')
 
 PROJECT_DIR = os.path.dirname(__file__)
 if getattr(sys, 'frozen', False):
