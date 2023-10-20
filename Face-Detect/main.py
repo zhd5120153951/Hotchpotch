@@ -2,17 +2,19 @@ import cv2
 import argparse
 import numpy as np
 
+
 class SCRFD():
     def __init__(self, onnxmodel, confThreshold=0.5, nmsThreshold=0.5):
         self.inpWidth = 640
         self.inpHeight = 640
         self.confThreshold = confThreshold
         self.nmsThreshold = nmsThreshold
-        self.net = cv2.dnn.readNet(onnxmodel)
+        self.net = cv2.dnn.readNet(onnxmodel)  #readNet()
         self.keep_ratio = True
         self.fmc = 3
         self._feat_stride_fpn = [8, 16, 32]
         self._num_anchors = 2
+
     def resize_image(self, srcimg):
         padh, padw, newh, neww = 0, 0, self.inpHeight, self.inpWidth
         if self.keep_ratio and srcimg.shape[0] != srcimg.shape[1]:
@@ -31,8 +33,13 @@ class SCRFD():
         else:
             img = cv2.resize(srcimg, (self.inpWidth, self.inpHeight), interpolation=cv2.INTER_AREA)
         return img, newh, neww, padh, padw
+
     def distance2bbox(self, points, distance, max_shape=None):
-        x1 = points[:, 0] - distance[:, 0]
+        print(points.shape)
+        print(points[:, 0].shape)
+        print(distance.shape)
+        print(distance[:, 0].shape)
+        x1 = points[:, 0] - distance[:, 0]  #zhd--形状不同
         y1 = points[:, 1] - distance[:, 1]
         x2 = points[:, 0] + distance[:, 2]
         y2 = points[:, 1] + distance[:, 3]
@@ -42,6 +49,7 @@ class SCRFD():
             x2 = x2.clamp(min=0, max=max_shape[1])
             y2 = y2.clamp(min=0, max=max_shape[0])
         return np.stack([x1, y1, x2, y2], axis=-1)
+
     def distance2kps(self, points, distance, max_shape=None):
         preds = []
         for i in range(0, distance.shape[1], 2):
@@ -53,9 +61,12 @@ class SCRFD():
             preds.append(px)
             preds.append(py)
         return np.stack(preds, axis=-1)
+
     def detect(self, srcimg):
         img, newh, neww, padh, padw = self.resize_image(srcimg)
-        blob = cv2.dnn.blobFromImage(img, 1.0 / 128, (self.inpWidth, self.inpHeight), (127.5, 127.5, 127.5), swapRB=True)
+        blob = cv2.dnn.blobFromImage(img,
+                                     1.0 / 128, (self.inpWidth, self.inpHeight), (127.5, 127.5, 127.5),
+                                     swapRB=True)
         # Sets the input to the network
         self.net.setInput(blob)
 
@@ -103,17 +114,28 @@ class SCRFD():
         indices = cv2.dnn.NMSBoxes(bboxes.tolist(), scores.tolist(), self.confThreshold, self.nmsThreshold)
         for i in indices:
             i = i[0]
-            xmin, ymin, xamx, ymax = int(bboxes[i, 0]), int(bboxes[i, 1]), int(bboxes[i, 0] + bboxes[i, 2]), int(bboxes[i, 1] + bboxes[i, 3])
+            xmin, ymin, xamx, ymax = int(bboxes[i, 0]), int(
+                bboxes[i, 1]), int(bboxes[i, 0] + bboxes[i, 2]), int(bboxes[i, 1] + bboxes[i, 3])
             cv2.rectangle(srcimg, (xmin, ymin), (xamx, ymax), (0, 0, 255), thickness=2)
             for j in range(5):
-                cv2.circle(srcimg, (int(kpss[i, j, 0]), int(kpss[i, j, 1])), 1, (0,255,0), thickness=-1)
-            cv2.putText(srcimg, str(round(scores[i], 3)), (xmin, ymin - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), thickness=1)
+                cv2.circle(srcimg, (int(kpss[i, j, 0]), int(kpss[i, j, 1])), 1, (0, 255, 0), thickness=-1)
+            cv2.putText(srcimg,
+                        str(round(scores[i], 3)), (xmin, ymin - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        1, (0, 255, 0),
+                        thickness=1)
         return srcimg
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--imgpath', type=str, default='s_l.jpg', help='image path')
-    parser.add_argument('--onnxmodel', default='weights/scrfd_500m_kps.onnx', type=str, choices=['weights/scrfd_500m_kps.onnx', 'weights/scrfd_2.5g_kps.onnx', 'weights/scrfd_10g_kps.onnx'], help='onnx model')
+    parser.add_argument('--imgpath', type=str, default='./Face-Detect/s_l.jpg', help='image path')
+    parser.add_argument(
+        '--onnxmodel',
+        default='./Face-Detect/weights/scrfd_500m_kps.onnx',
+        type=str,
+        choices=['weights/scrfd_500m_kps.onnx', './weights/scrfd_2.5g_kps.onnx', 'weights/scrfd_10g_kps.onnx'],
+        help='onnx model')
     parser.add_argument('--confThreshold', default=0.5, type=float, help='class confidence')
     parser.add_argument('--nmsThreshold', default=0.5, type=float, help='nms iou thresh')
     args = parser.parse_args()
