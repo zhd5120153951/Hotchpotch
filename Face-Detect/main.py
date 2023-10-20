@@ -4,6 +4,7 @@ import numpy as np
 
 
 class SCRFD():
+
     def __init__(self, onnxmodel, confThreshold=0.5, nmsThreshold=0.5):
         self.inpWidth = 640
         self.inpHeight = 640
