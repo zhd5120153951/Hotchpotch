@@ -20,7 +20,7 @@ img_path = 'D:\\FilePackage\\BaiduDiskDownload\\Video\\27'
 filelist = os.listdir(video_path)
 
 
-def video2img(filename):
+def video2img(filename, i):
     cnt = 0
     dnt = 1
     # if os.path.exists(img_path + str(filename)):
@@ -36,7 +36,7 @@ def video2img(filename):
         # width = frame.shape[1]
         # height = frame.shape[0]
         if (cnt % 12) == 0:  #每隔25帧取一张图
-            cv2.imwrite(img_path + '\\' + str(dnt) + '_27.jpg', frame)
+            cv2.imwrite(img_path + '\\' + str(dnt) + '_{}.jpg'.format(i), frame)
             dnt += 1
             # cv2.imencode('.jpg', frame[1].tofile(img_path + str(filename) + '\\' + str(dnt) + '.jpg'))
             print(img_path + '\\' + str(dnt) + '.jpg')
@@ -47,7 +47,7 @@ def video2img(filename):
 
 
 if __name__ == '__main__':
-    for filename in filelist:
+    for i, filename in enumerate(filelist):
         print(filename)
-        threading.Thread(target=video2img, args=(filename, )).start()
-        print('\nconvert video into img successfully')
+        threading.Thread(target=video2img, args=(filename, i)).start()
+        print('\n {}th thread convert {} into img'.format(i, filename))
