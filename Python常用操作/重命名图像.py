@@ -76,7 +76,7 @@ if __name__ == "__main__":
     # folder_path = 'D:\\FilePackage\\datasets\\Object Detect\\fire\\images\\train\\背景图'
     # jpgPath = 'D:\\FilePackage\\datasets\\Object Detect\\fire\\images\\train\\955'
     # txtPath = 'D:\\FilePackage\\datasets\\Object Detect\\fire\\labels\\val\\955'
-    folder_path = 'D:\\FilePackage\\datasets\\FLIR_ADAS_v2\\images_thermal_val\\data'
-    new_name_prefix = 'thermal_'
+    folder_path = 'D:\\FilePackage\\datasets\\smoke_v1'
+    new_name_prefix = 'gas_'
     rename_files(folder_path, new_name_prefix)
     # selectBySuffiex(jpgPath, txtPath, new_name_prefix)
