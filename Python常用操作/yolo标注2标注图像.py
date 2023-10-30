@@ -19,9 +19,9 @@ import cv2
 
 alphabet = ['person', 'bicycle', 'car']
 
-label_root = Path("D://FilePackage//datasets//flir_v1_3_8862//val//labels")  # 替换为实际的标注文件夹路径
-image_root = Path("D://FilePackage//datasets//flir_v1_3_8862//val//images")  # 替换为实际的图像文件夹路径
-output_root = Path("D://FilePackage//datasets//flir_v1_3_8862//yolo2img")  # 替换为实际的输出文件夹路径
+label_root = Path("D://FilePackage//datasets//gas2_txt")  # 替换为实际的标注文件夹路径
+image_root = Path("D://FilePackage//datasets/gas2")  # 替换为实际的图像文件夹路径
+output_root = Path("D://FilePackage//datasets//yolo2img")  # 替换为实际的输出文件夹路径
 
 
 def paint(label_file, image_file, output_file):
@@ -65,6 +65,6 @@ output_image_folder.mkdir(parents=True, exist_ok=True)
 
 # 遍历标注文件夹中的所有txt文件
 for label_file in label_root.glob("*.txt"):
-    image_file = image_root / (label_file.stem + ".jpeg")
+    image_file = image_root / (label_file.stem + ".jpg")
     output_image_file = output_image_folder / (label_file.stem + ".jpg")
     paint(label_file, image_file, output_image_file)

@@ -16,7 +16,7 @@ from threading import Lock, Thread
 
 #传入的视频路径和输出图像路径
 video_path = 'D:\\FilePackage\\BaiduDiskDownload\\Video\\'
-img_path = 'D:\\FilePackage\\BaiduDiskDownload\\Video\\27'
+img_path = 'D:\\FilePackage\\BaiduDiskDownload\\Video\\img'
 filelist = os.listdir(video_path)
 
 

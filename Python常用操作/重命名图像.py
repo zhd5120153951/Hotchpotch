@@ -49,7 +49,7 @@ def rename_Img(path_orig, path_dst):
 def selectBySuffiex(jpgPath, txtPath, new_name_prefix):
     imgList = os.listdir(jpgPath)
     txtList = os.listdir(txtPath)
-    start_number = 618
+    start_number = 1
     for img in imgList:
         # 构建新文件名
         file_ext_jpg = os.path.splitext(img)[1]  # 获取文件扩展名
@@ -74,9 +74,9 @@ def selectBySuffiex(jpgPath, txtPath, new_name_prefix):
 if __name__ == "__main__":
     # folder_path = 'D:\\FilePackage\\datasets\\Object Detect\\fire\\images\\val'
     # folder_path = 'D:\\FilePackage\\datasets\\Object Detect\\fire\\images\\train\\背景图'
-    # jpgPath = 'D:\\FilePackage\\datasets\\Object Detect\\fire\\images\\train\\955'
-    # txtPath = 'D:\\FilePackage\\datasets\\Object Detect\\fire\\labels\\val\\955'
-    folder_path = 'D:\\FilePackage\\datasets\\smoke_v1'
-    new_name_prefix = 'gas_'
-    rename_files(folder_path, new_name_prefix)
-    # selectBySuffiex(jpgPath, txtPath, new_name_prefix)
+    jpgPath = 'D:\\FilePackage\\datasets\\gas2'
+    txtPath = 'D:\\FilePackage\\datasets\\gas2_txt'
+    # folder_path = 'D:\\FilePackage\\datasets\\gas'
+    new_name_prefix = 'gas2_'
+    # rename_files(folder_path, new_name_prefix)
+    selectBySuffiex(jpgPath, txtPath, new_name_prefix)

@@ -18,8 +18,10 @@ from PIL import Image
 def filter_same_name_imgtxt(img_path, txt_path, save_path):
     # start_number = 1
     for img_name in os.listdir(img_path):
+        preffixe_img = os.path.splitext(img_name)[0]  #img名
         for txt_name in os.listdir(txt_path):
-            if img_name != txt_name:
+            preffixe_txt = os.path.splitext(txt_name)[0]  #txt名
+            if preffixe_img != preffixe_txt:
                 continue
             else:
                 source_txt_path = os.path.join(txt_path, txt_name)
@@ -29,8 +31,9 @@ def filter_same_name_imgtxt(img_path, txt_path, save_path):
 
 if __name__ == '__main__':
     img_path = 'D:\\FilePackage\\datasets\\gas'
-    txt_path = 'D:\\FilePackage\\datasets\\SmokeDetection\\train\\labels'
-    save_path = 'D:\\FilePackage\\datasets\\gas_txt\\'
+    txt_path = 'D:\\FilePackage\\datasets\\chimney.v2i.yolov5pytorch\\train\labels'
+    # txt_path = 'D:\\FilePackage\\datasets\\SmokeDetection\\train\\labels'
+    save_path = 'D:\\FilePackage\\datasets\\gas2_txt'
     filered_img = filter_same_name_imgtxt(img_path, txt_path, save_path)
     # 打印筛选后的图像
     # for img in filered_img:
