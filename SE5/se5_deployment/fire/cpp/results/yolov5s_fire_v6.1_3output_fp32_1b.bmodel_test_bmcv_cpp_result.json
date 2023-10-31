@@ -1,0 +1,17 @@
+[
+    {
+        "bboxes": [
+            {
+                "bbox": [
+                    0,
+                    24,
+                    477,
+                    301
+                ],
+                "category_id": 0,
+                "score": 0.7318753004074097
+            }
+        ],
+        "image_name": "fire.jpg"
+    }
+]
