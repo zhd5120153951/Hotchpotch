@@ -34,8 +34,10 @@ def after_request(response):
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
+
 # def set_jpg(file):
-#     file.filename = 
+#     file.filename =
+
 
 @app.route('/')
 def hello_world():
@@ -54,12 +56,13 @@ def upload_file():
         file.save(src_path)
         shutil.copy(src_path, './tmp/ct')
         image_path = os.path.join('./tmp/ct', file.filename)
-        pid, image_info = core.main.c_main(
-            image_path, current_app.model, file.filename.rsplit('.', 1)[1], option)
-        return jsonify({'status': 1,
-                        'image_url': 'https://cxy.ssdlab.cn/tmp/ct/' + pid,
-                        'draw_url': 'https://cxy.ssdlab.cn/tmp/comp/' + pid,
-                        'image_info': image_info})
+        pid, image_info = core.main.c_main(image_path, current_app.model, file.filename.rsplit('.', 1)[1], option)
+        return jsonify({
+            'status': 1,
+            'image_url': 'https://cxy.ssdlab.cn/tmp/ct/' + pid,
+            'draw_url': 'https://cxy.ssdlab.cn/tmp/comp/' + pid,
+            'image_info': image_info
+        })
 
     return jsonify({'status': 0})
 
@@ -84,13 +87,11 @@ def show_photo(file):
 
 
 if __name__ == '__main__':
-    files = [
-        'uploads', 'tmp/ct', 'tmp/draw',
-        'tmp/image', 'tmp/mask', 'tmp/uploads', 'tmp/comp'
-    ]
+    files = ['uploads', 'tmp/ct', 'tmp/draw', 'tmp/image', 'tmp/mask', 'tmp/uploads', 'tmp/comp']
     for ff in files:
         if not os.path.exists(ff):
             os.makedirs(ff)
     with app.app_context():
         current_app.model = Detector()
-    app.run(host='0.0.0.0', port=5003, debug=True)
+    # app.run(host='0.0.0.0', port=5003, debug=True)
+    app.run(host='http://8.137.53.211/', port=8080, debug=True)
