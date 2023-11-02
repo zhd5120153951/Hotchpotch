@@ -30,7 +30,6 @@ logging.basicConfig(filename='app.log', level=logging.DEBUG, format='%(asctime)s
 
 
 class YOLOv5:
-
     def __init__(self, args):
         # load bmodel
         self.net = sail.Engine(args.bmodel, args.dev_id, sail.IOMode.SYSIO)
