@@ -11,7 +11,6 @@
 '''
 
 import cv2
-from matplotlib import contour
 import numpy as np
 
 # 没有背景减除--因为背景一般不会动--帧差后为0--但也会影响效果
@@ -72,7 +71,7 @@ def diff_frame_nobkg(videopath):
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
     fbkg = cv2.createBackgroundSubtractorMOG2()
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    frame1 = np.zeros((640, 480))
+    # frame1 = np.zeros((640, 480))
     out = cv2.VideoWriter('test.avi', fourcc, 10, (640, 480))
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
 
