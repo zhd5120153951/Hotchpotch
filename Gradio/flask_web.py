@@ -25,7 +25,9 @@ logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(filename)s %(levelname)s %(thread)d %(threadName)s %(message)s',
                     datefmt='%a %d %b %Y %H:%M:%S',
                     filename='myapp.log',
-                    filemode='w')
+                    filemode='w')  # a是追加,w是覆盖
+# 创建一个日志记录器
+logger = logging.getLogger('my_logger')
 
 
 def greet(name, is_moring, temperatue):
@@ -72,10 +74,10 @@ demo2 = gr.Interface(fn=img_proc, inputs=gr.Image(
 demo3 = gr.Interface(fn=stream_proc, inputs=gr.Image(
     shape=(640, 640)), outputs="image")
 if __name__ == "__main__":
-    app, local_url, share_url = demo.launch()
+    # app, local_url, share_url = demo.launch()
     # logging.info(app)
     # logging.info(share_url)
     # logging.info(local_url)
 
-    # demo2.launch()
+    demo2.launch()
     # demo3.launch()
