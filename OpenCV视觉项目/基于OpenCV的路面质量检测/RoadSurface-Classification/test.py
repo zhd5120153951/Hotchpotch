@@ -20,7 +20,7 @@ import os
 import glob
 import operator
 
-image_size = 256  #128
+image_size = 256  # 128
 num_channels = 3
 images = []
 
@@ -97,9 +97,12 @@ while cv.waitKey(1) < 0:
         color = (0, 153, 255)
 
     cv.rectangle(finalimg, (0, 0), (145, 40), (255, 255, 255), cv.FILLED)
-    cv.putText(finalimg, 'Class: ', (5, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
-    cv.putText(finalimg, label, (70, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
-    cv.putText(finalimg, prob, (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
+    cv.putText(finalimg, 'Class: ', (5, 15),
+               cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
+    cv.putText(finalimg, label, (70, 15),
+               cv.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
+    cv.putText(finalimg, prob, (5, 35),
+               cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
 
     vid_writer.write(finalimg.astype(np.uint8))
 
