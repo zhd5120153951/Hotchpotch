@@ -41,13 +41,14 @@ def greet(name, is_moring, temperatue):
 
 
 def img_proc(input_img):
-    sepia_filter = np.array([[0.393, 0.769, 0.189], [0.349, 0.686, 0.168], [0.272, 0.534, 0.131]])
+    sepia_filter = np.array(
+        [[0.393, 0.769, 0.189], [0.349, 0.686, 0.168], [0.272, 0.534, 0.131]])
     sepia_img = input_img.dot(sepia_filter.T)
     sepia_img /= sepia_img.max()
     return sepia_img
 
 
-#streaming
+# streaming
 def stream_proc():
     cap = cv2.VideoCapture("rtsp://admin:great123@192.168.8.201")
     while True:
@@ -65,10 +66,16 @@ demo = gr.Interface(
     outputs=["text", "number"],
 )
 
-demo2 = gr.Interface(fn=img_proc, inputs=gr.Image(shape=(640, 640)), outputs="image")
+demo2 = gr.Interface(fn=img_proc, inputs=gr.Image(
+    shape=(640, 640)), outputs="image")
 # rtsp://admin:great123@192.168.8.201
-demo3 = gr.Interface(fn=stream_proc, inputs=gr.Image(shape=(640, 640)), outputs="image")
+demo3 = gr.Interface(fn=stream_proc, inputs=gr.Image(
+    shape=(640, 640)), outputs="image")
 if __name__ == "__main__":
-    # app, local_url, share_url = demo.launch()
+    app, local_url, share_url = demo.launch()
+    # logging.info(app)
+    # logging.info(share_url)
+    # logging.info(local_url)
+
     # demo2.launch()
-    demo3.launch()
+    # demo3.launch()
