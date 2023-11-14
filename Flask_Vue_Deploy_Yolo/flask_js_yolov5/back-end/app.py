@@ -56,7 +56,8 @@ def upload_file():
         file.save(src_path)
         shutil.copy(src_path, './tmp/ct')
         image_path = os.path.join('./tmp/ct', file.filename)
-        pid, image_info = core.main.c_main(image_path, current_app.model, file.filename.rsplit('.', 1)[1], option)
+        pid, image_info = core.main.c_main(
+            image_path, current_app.model, file.filename.rsplit('.', 1)[1], option)
         return jsonify({
             'status': 1,
             'image_url': 'https://cxy.ssdlab.cn/tmp/ct/' + pid,
@@ -87,7 +88,8 @@ def show_photo(file):
 
 
 if __name__ == '__main__':
-    files = ['uploads', 'tmp/ct', 'tmp/draw', 'tmp/image', 'tmp/mask', 'tmp/uploads', 'tmp/comp']
+    files = ['uploads', 'tmp/ct', 'tmp/draw', 'tmp/image',
+             'tmp/mask', 'tmp/uploads', 'tmp/comp']
     for ff in files:
         if not os.path.exists(ff):
             os.makedirs(ff)
