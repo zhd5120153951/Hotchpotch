@@ -83,7 +83,7 @@ def record_video_increment_name(rtsp_url, write_name, is_show=True):
         if not ret:
             break
 
-        #处理红外视频
+        # 处理红外视频
         # 转换颜色空间
 
         # gray_image = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -127,7 +127,8 @@ def save_frames_from_video(rtsp_url, output_folder, is_show=True):
 
         while os.path.exists(os.path.join(output_folder, f"frame_{frame_num:05d}.jpg")):
             frame_num += 1
-        frame_filename = os.path.join(output_folder, f"frame_{frame_num:05d}.jpg")
+        frame_filename = os.path.join(
+            output_folder, f"frame_{frame_num:05d}.jpg")
         cv2.imwrite(frame_filename, frame)
 
         frame_num += 1

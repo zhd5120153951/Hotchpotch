@@ -7,7 +7,9 @@ from utils import record_video_increment_name
 """
 
 if __name__ == "__main__":
-    rtsp_url = "rtsp://172.30.16.135:554/PR0"
-    write_name = "D:\\FilePackage\\datasets\\thermal\\thermal.mp4"
+    # rtsp_url = "rtsp://172.30.16.135:554/PR0"
+    # rtsp_url = 1  # 本地摄像头
+    rtsp_url = "rtsp://admin:admin@192.168.0.204:554/cam/realmonitor?channel=1&subtype=0"  # 公司大华摄像头
+    write_name = "D:\\FilePackage\\datasets\\thermal\\smoke2.mp4"
 
     record_video_increment_name(rtsp_url, write_name)

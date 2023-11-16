@@ -1,5 +1,6 @@
 import cv2
 import pyautogui
+import numpy as np
 
 # 获取屏幕尺寸
 screen_width, screen_height = pyautogui.size()
@@ -8,12 +9,13 @@ screen_width, screen_height = pyautogui.size()
 frame_rate = 20
 output_filename = 'screen_record.mp4'
 fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-output_video = cv2.VideoWriter(output_filename, fourcc, frame_rate, (screen_width, screen_height))
+output_video = cv2.VideoWriter(
+    output_filename, fourcc, frame_rate, (screen_width, screen_height))
 
 # 开始录屏
 try:
     while True:
-        # 获取屏幕截图
+        # 获取屏幕截图=
         screenshot = pyautogui.screenshot()
 
         # 将截图转换成视频帧
