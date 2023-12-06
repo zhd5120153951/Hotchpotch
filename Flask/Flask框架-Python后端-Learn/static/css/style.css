@@ -1,0 +1,5 @@
+/* 样式表修饰哪个部分,就用哪个部分左前名字再加{} */
+body {
+    background-color: pink;
+    font-size: larger;
+}

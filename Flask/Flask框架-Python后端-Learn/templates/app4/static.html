@@ -1,0 +1,19 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>加载静态文件</title>
+    <!-- 加载css -->
+    <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+    <!-- 加载脚本 -->
+    <script src="{{url_for('static',filename='js/first.js')}}"></script>
+
+</head>
+
+<body>
+    <img src="{{url_for('static',filename='images/pic.jpg')}}" alt="">
+
+</body>
+
+</html>
