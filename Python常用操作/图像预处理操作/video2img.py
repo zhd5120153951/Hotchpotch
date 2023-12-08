@@ -35,12 +35,12 @@ def video2img(filename, i):
 
         # width = frame.shape[1]
         # height = frame.shape[0]
-        if (cnt % 25) == 0:  # 每隔25帧取一张图
-            cv2.imwrite(img_path + '\\' + str(dnt) +
-                        '_{}.jpg'.format(i), frame)
+        if (cnt % 10) == 0:  # 每隔25帧取一张图
+            cv2.imwrite(img_path + '\\' + str(i)+'_'+str(dnt) +
+                        '.jpg', frame)
             dnt += 1
             # cv2.imencode('.jpg', frame[1].tofile(img_path + str(filename) + '\\' + str(dnt) + '.jpg'))
-            print(img_path + '\\' + str(dnt) + '.jpg')
+            print(img_path + '\\' + str(dnt) + f'_{i}.jpg')
         cnt += 1
         if cv2.waitKey(1) % 0xFF == ord('q'):
             break
