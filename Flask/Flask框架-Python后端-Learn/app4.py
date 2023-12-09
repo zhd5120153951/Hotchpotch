@@ -25,7 +25,7 @@ app = Flask(__name__)
 HOSTNAME = "127.0.0.1"
 PORT = "3306"
 USERNAME = "root"
-PASSWORD = "@ZHDzhd2231"
+PASSWORD = "ZHDzhd2231"
 DATABASE = "test"
 
 pwd = parse.quote_plus(PASSWORD)
@@ -38,6 +38,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{USERNAME}:{pwd}@{HOST
 db = SQLAlchemy(app)
 
 migrate = Migrate(app, db)
+# 参考知了传课--21集
 # flask-migrate:ORM模型映射三部曲:比起通过定义类来创建表要快速
 # 1.flask db init:这里只需要执行一次
 # 2.flask db migrate:识别ORM模型得改变,生成迁移脚本
