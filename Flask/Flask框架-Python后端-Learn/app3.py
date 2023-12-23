@@ -38,14 +38,14 @@ def index():
         "username": "lucy",
         "email": "adad@qq.com"
     }
-    return render_template("app2/index.html", user=user, person=person)
+    return render_template("app4/index.html", user=user, person=person)
 
 # 传参数
 
 
 @app.route("/blog/<blog_id>")
 def blog_list(blog_id):
-    return render_template("app2/blog_list.html", blog_id=blog_id)
+    return render_template("app4/blog_list.html", blog_id=blog_id)
 
 
 # 获取当前时间
@@ -64,7 +64,7 @@ app.add_template_filter(get_systime_format, "dformat")
 def filter():
     user = User("daito-阿东", "zenghedong@outlook.com")
     sysTime = datetime.now()  # 可以一直获取
-    return render_template("app3/filter.html", user=user, sysTime=sysTime)
+    return render_template("app4/filter.html", user=user, sysTime=sysTime)
 
 
 if __name__ == '__main__':

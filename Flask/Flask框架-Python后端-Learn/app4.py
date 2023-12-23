@@ -17,9 +17,10 @@ from sqlalchemy import Nullable, create_engine
 from urllib import parse
 from sqlalchemy import text
 from flask_migrate import Migrate
+# from flask_script import Manager
 
 app = Flask(__name__)
-
+# manager = Manager(app)
 # app.config()设置好连接信息
 # 然后使用SQLALCHMEY()创建一个数据库对象,并自动读取数据库配置信息
 HOSTNAME = "127.0.0.1"
@@ -112,6 +113,7 @@ def index():
 
 @app.route("/blog/<blog_id>")
 def blog_list(blog_id):
+
     return render_template("app2/blog_list.html", blog_id=blog_id)
 
 
@@ -240,4 +242,6 @@ def query_article():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=True)  # debug是否开启调试,threaded是否多线程
+    # 这个可用manager.run代替:manager = Manager(app)在app=Flask()后面
+    # manager.run()
