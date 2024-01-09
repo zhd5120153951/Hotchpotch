@@ -1,5 +1,5 @@
 '''
-@FileName   :守护进程拉起子进程.py
+@FileName   :子进程.py
 @Description:
 @Date       :2022/10/12 14:18:30
 @Author     :daito
@@ -18,7 +18,7 @@ def child_process_func():
     while True:
         print("Child Process is running...")
         time.sleep(1)
-        #模拟崩溃---实际可用try catch捕捉
+        # 模拟崩溃---实际可用try catch捕捉
         # raise Exception("Child process crashed!")
         try:
             print("结果:{}".format(float(10 / count)))
@@ -33,10 +33,11 @@ def daemon_process_fun():
     while True:
         print("Daemon process is running...")
         time.sleep(1)
-        #检查子进程状态
+
+        # 检查子进程状态
         if not child.is_alive():
             print("Child process crashed, restarting...")
-            #重启子进程
+            # 重启子进程
             child.start()
         else:
             print("Child process is running...")
@@ -45,16 +46,16 @@ def daemon_process_fun():
 
 if __name__ == "__main__":
     # 创建子进程
-    child = mp.Process(target=child_process_func)
-    #启动子进程
+    child = mp.Process(target=child_process_func)  # 这个是子进程中的子进程1
+    # 启动子进程
     child.start()
 
-    #创建守护进程
-    daemon = mp.Process(target=daemon_process_fun)
+    # 创建守护进程
+    daemon = mp.Process(target=daemon_process_fun)  # 这个是子进程中的子进程2
     # 设置该进程为守护进程
     daemon.daemon = True
-    #启动守护进程
+    # 启动守护进程
     daemon.start()
 
-    #等待子进程结束
+    # 等待子进程结束
     child.join()

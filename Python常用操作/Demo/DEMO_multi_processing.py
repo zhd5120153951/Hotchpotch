@@ -65,7 +65,8 @@ def run__pool():  # main process
     start_time = time.time()
     with Pool(cpu_worker_num) as p:
         outputs = p.map(func2, process_args)
-    print(f'| outputs: {outputs}    TimeUsed: {time.time() - start_time:.1f}    \n')
+    print(
+        f'| outputs: {outputs}    TimeUsed: {time.time() - start_time:.1f}    \n')
     '''Another way (I don't recommend)
     Using 'functions.partial'. See https://stackoverflow.com/a/25553970/9293137
     from functools import partial
@@ -105,7 +106,8 @@ def run__pipe():
 def run__queue():
     from multiprocessing import Process, Queue
 
-    queue = Queue(maxsize=4)  # the following attribute can call in parent(main) or child process, just like 'Pipe'
+    # the following attribute can call in parent(main) or child process, just like 'Pipe'
+    queue = Queue(maxsize=4)
     queue.put(True)
     queue.put([0, None, object])  # you can put deepcopy thing
     queue.qsize()  # the length of queue
@@ -122,6 +124,6 @@ def run__queue():
 
 
 if __name__ == '__main__':  # it is necessary to write main process in "if __name__ == '__main__'"
-    # run__process()
+    run__process()
     # run__pool()
-    run__pipe()
+    # run__pipe()

@@ -19,11 +19,11 @@ from processor.AIDetector_pytorch import Detector
 
 import core.main
 
-#引用config.py文件
+# 引用config.py文件
 from config import *
 import math
 
-#为方便打包，路径引用方式改为自动获取
+# 为方便打包，路径引用方式改为自动获取
 import os
 import sys
 
@@ -42,8 +42,8 @@ app.config.from_object(__name__)
 app.secret_key = 'secret!'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-#werkzeug_logger = rel_log.getLogger('werkzeug')
-#werkzeug_logger.setLevel(rel_log.ERROR)
+# werkzeug_logger = rel_log.getLogger('werkzeug')
+# werkzeug_logger.setLevel(rel_log.ERROR)
 
 # 解决缓存刷新问题
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
@@ -77,8 +77,9 @@ def upload_file():
         file.save(src_path)
         shutil.copy(src_path, PROJECT_DIR + '/tmp/original')
         image_path = os.path.join(PROJECT_DIR + '/tmp/original', file.filename)
-        pid, image_info = core.main.c_main(image_path, current_app.model, file.filename.rsplit('.', 1)[1])
-        delete_file(file.filename)  #调用删除文件上传缓存接口，避免文件多次存储导致浪费资源
+        pid, image_info = core.main.c_main(
+            image_path, current_app.model, file.filename.rsplit('.', 1)[1])
+        delete_file(file.filename)  # 调用删除文件上传缓存接口，避免文件多次存储导致浪费资源
         return jsonify({
             'status': 1,
             'image_url': 'http://127.0.0.1:5003/tmp/original/' + pid,
@@ -131,7 +132,7 @@ def testdb1():
     return render_template('testdb.html', show_data_db1=show_data_db1)
 
 
-#把字典数据重整为字符串【未完成废弃，直接采用原始数据】
+# 把字典数据重整为字符串【未完成废弃，直接采用原始数据】
 def convertdata(image_info):
     str = image_info
     return str

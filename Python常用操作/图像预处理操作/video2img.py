@@ -15,7 +15,7 @@ import threading
 from threading import Lock, Thread
 
 # 传入的视频路径和输出图像路径
-video_path = 'D:\\FilePackage\\BaiduDiskDownload\\zhongjie\\'
+video_path = 'D:\\FilePackage\\BaiduDiskDownload\\gas\\'
 img_path = 'D:\\FilePackage\\BaiduDiskDownload\\zhongjie-img'
 filelist = os.listdir(video_path)
 
@@ -36,7 +36,7 @@ def video2img(filename, i):
         # width = frame.shape[1]
         # height = frame.shape[0]
         if (cnt % 10) == 0:  # 每隔25帧取一张图
-            cv2.imwrite(img_path + '\\' + str(i)+'_'+str(dnt) +
+            cv2.imwrite(img_path + '\\' + str(i)+'__'+str(dnt) +
                         '.jpg', frame)
             dnt += 1
             # cv2.imencode('.jpg', frame[1].tofile(img_path + str(filename) + '\\' + str(dnt) + '.jpg'))
