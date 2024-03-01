@@ -33,7 +33,7 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    // 处理后端返回的结果
+                    // 处理后端返回的结果--如果没有返回值而是页面跳转怎么解决?
                     document.getElementById('result').innerText = 'Result: ' + data.ret;
                 });
         }
