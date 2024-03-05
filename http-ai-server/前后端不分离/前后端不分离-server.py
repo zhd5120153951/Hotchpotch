@@ -1,12 +1,35 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, url_for
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def index():
-    return render_template('home.html')
+    # return render_template('home.html')
+    return render_template('index.html')
 
+
+def authenticate_user(username, password):
+    # Replace this with your authentication logic
+    return username == 'example' and password == 'password'
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
+    if authenticate_user(username, password):
+        # Replace this with a proper session management or token generation
+        return jsonify({'success': True, 'redirect': url_for('home')})
+    else:
+        return jsonify({'success': False, 'message': 'Invalid credentials'})
+
+
+@app.route('/home')
+def home():
+    return render_template('home.html')
 # 前后端不分离--前端和后端写在一个py中,请求地址也不同
 
 
