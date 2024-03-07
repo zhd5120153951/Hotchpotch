@@ -27,9 +27,26 @@ def login():
         return jsonify({'success': False, 'message': 'Invalid credentials'})
 
 
+@app.route('/cancel', methods=['POST'])
+def cancel():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
+    if username == password:
+        return jsonify({'success': True, 'redirect': url_for('gister')})
+    else:
+        return jsonify({'success': False, 'message': 'not same'})
+
+
 @app.route('/home')
 def home():
     return render_template('home.html')
+
+
+@app.route('/gister')
+def gister():
+    return render_template('gister.html')
 # 前后端不分离--前端和后端写在一个py中,请求地址也不同
 
 
