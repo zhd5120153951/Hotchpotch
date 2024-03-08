@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>preview</title>
+    <link type="text/css" href="../static/layui-v2.9.7/layui/css/layui.css" rel="stylesheet">
+</head>
+
+<body>
+    <table class="layui-hide" id="ID-table-demo-data"></table>
+
+    <script src="../static/layui-v2.9.7/layui/layui.js"></script>
+    <script>
+        layui.use('table', function () {
+            var table = layui.table;
+            //向后端发起请求
+            fetch("http://127.0.0.1:5001/preview")
+                .then(response => {
+                    //检查状态码
+                    if (response.ok) {
+                        //解析相应内容为json
+                        return response.json();
+                    }
+                    else {
+                        //异常
+                        throw new Error('Network response was not ok');
+                    }
+                })
+                .then(data => {
+                    //处理获取的数据
+                    var inst = table.render({
+                        elem: '#ID-table-demo-data',
+                        cols: [[ //标题栏
+                            { field: 'id', title: '排序', width: 80, sort: true },
+                            { field: 'username', title: '用户名', width: 120 },
+                            { field: 'password', title: '密码', width: 120 },
+                            { field: 'rtspurl', title: '流地址', minWidth: 320 }
+                        ]],
+                        data: data,
+                        skin: 'line', // 表格风格
+                        //even: true,
+                        page: true, // 是否显示分页
+                        limits: [5, 10, 15],
+                        limit: 5 // 每页默认显示的数量
+                    });
+                })
+
+            // 已知数据渲染
+
+        });
+    </script>
+
+</body>
+
+</html>

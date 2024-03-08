@@ -7,6 +7,37 @@
 </head>
 
 <body>
+
+    <h1>Data Processing</h1>
+    <form id="dataForm">
+        <label for="data">Enter Data:</label>
+        <input type="text" name="data" id="dataInput" required><br>
+
+        <button type="button" onclick="submitForm()">Submit</button>
+    </form>
+
+    <p id="result"></p>
+
+    <script>
+        function submitForm() {
+            var data = document.getElementById('dataInput').value;
+
+            // 使用 JavaScript 的 Fetch API 向后端发送数据
+            fetch('http://127.0.0.1:5001/proc_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ data: data }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // 处理后端返回的结果--如果没有返回值而是页面跳转怎么解决?
+                    document.getElementById('result').innerText = 'Result: ' + data.ret;
+                });
+        }
+    </script>
+
     <h1>Configure Parameters</h1>
     <form id="configForm">
         <label for="rtspUrl">RTSP URL:</label> <input type="text" id="rtspUrl" name="rtspUrl" required><br>
