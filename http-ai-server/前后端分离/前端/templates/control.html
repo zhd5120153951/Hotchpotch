@@ -1,30 +1,26 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>control</title>
-    <link type="text/css" href="../static/layui-v2.9.7/layui/css/layui.css" rel="stylesheet">
-</head>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>control</title>
+        <link type="text/css" href="../static/layui-v2.9.7/layui/css/layui.css"
+            rel="stylesheet">
+    </head>
 
-<body>
-    <table class="layui-hide" id="test" lay-filter="test"></table>
-    <script type="text/html" id="barDemo">
-        <div class="layui-clear-space">
-            <a class="layui-btn layui-btn-xs" lay-event="control">编辑布控</a>
-            <a class="layui-btn layui-btn-xs" lay-event="cancel">
-                取消布控
-            </a>
-        </div>
-    </script>
-    <div id="customLayer" style="display: none;">
-        <h1>这是一个自定义层</h1>
-        <p>你可以在这里放置任何 HTML 内容。</p>
-    </div>
-
-    <script src="../static/layui-v2.9.7/layui/layui.js"></script>
-    <script>
+    <body>
+        <table class="layui-hide" id="test" lay-filter="test"></table>
+        <script type="text/html" id="barDemo">
+            <div class="layui-clear-space">
+                <a class="layui-btn layui-btn-xs" lay-event="control">编辑布控</a>
+                <a class="layui-btn layui-btn-xs" lay-event="cancel">
+                    取消布控
+                </a>
+            </div>
+        </script>
+        <script src="../static/layui-v2.9.7/layui/layui.js"></script>
+        <script>
         var temp = null;
         layui.use('table', function () {
             var table = layui.table;
@@ -70,8 +66,9 @@
                     layer.open({
                         title: '布控摄像头 - id:' + data.id,
                         type: 1,
-                        content: 'sfdef',
-                        area: ['80%', '80%']
+                        
+                        area: ['80%', '80%'],
+                        content: "dwd"
                     })
                 }
                 else if (obj.event === 'cancel') {
@@ -107,6 +104,6 @@
         });
     </script>
 
-</body>
+    </body>
 
 </html>

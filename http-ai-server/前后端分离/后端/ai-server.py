@@ -1,11 +1,9 @@
 import json
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from matplotlib.backend_bases import cursors
 import requests
 import sqlite3
 
-from torch import le
 app = Flask(__name__)
 CORS(app)  # 处理跨域问题
 
