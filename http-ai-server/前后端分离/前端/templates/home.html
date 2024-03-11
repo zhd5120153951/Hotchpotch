@@ -18,11 +18,11 @@
             style="position: fixed;top: 100px;right: 840px;">
             <i class="layui-icon layui-icon-eye"></i>
             预览</a>
-        <button type="button" class="layui-btn layui-btn-lg layui-btn-normal"
+        <button id="controlBtn" type="button" class="layui-btn layui-btn-lg layui-btn-normal"
             style="position: fixed;top: 100px;right: 720px;">
             <i class="layui-icon layui-icon-console"></i> 布控
         </button>
-        <button type="button" class="layui-btn layui-btn-lg layui-btn-normal"
+        <button id="warnBtn" type="button" class="layui-btn layui-btn-lg layui-btn-normal"
             style="position: fixed;top: 100px;right: 600px;">
             <i class="layui-icon layui-icon-tips-fill"></i> 报警
         </button>
@@ -33,9 +33,18 @@
 
 <script>
     const addBtn = document.getElementById('addBtn');
+    const controlBtn = document.getElementById('controlBtn');
+    const warnBtn = document.getElementById('warnBtn');
+
     addBtn.addEventListener('click', function () {
         window.location.href = "camera";//设置路由
-    })
+    });
+    controlBtn.addEventListener('click', function () {
+        window.location.href = "control";
+    });
+    warnBtn.addEventListener('click', function () {
+        window.location.href = "warn";
+    });
 
 </script>
 

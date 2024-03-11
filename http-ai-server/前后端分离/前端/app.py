@@ -16,6 +16,17 @@ def camera():
 @app.route('/preview')
 def preview():
     return render_template('preview.html')
+    # return render_template('prev.html')
+
+
+@app.route('/control')
+def control():
+    return render_template('control.html')
+
+
+@app.route('/warn')
+def warn():
+    return render_template('warn.html')
 
 
 if __name__ == '__main__':

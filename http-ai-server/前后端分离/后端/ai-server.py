@@ -1,3 +1,4 @@
+import json
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from matplotlib.backend_bases import cursors
@@ -64,12 +65,17 @@ def addCamera():
     password = request.json['password']
     rtspurl = request.json['rtspurl']
     conn, cursor = connSqlite('admin.db')
-    cursor.execute("SELECT * FROM camera WHERE password=?", (rtspurl,))
-    rtsp_ret = cursor.fetchall()
-    if len(rtsp_ret) > 0:
-        return jsonify({'success': False, 'msg': '该摄像头已经存在,请重新设置.'})
-    cursor.execute('''
-            INSERT INTO camera (username,password,rtspurl) VALUES (?,?,?)''', (usernmae, password, rtspurl))
+    cursor.execute("SELECT * FROM camera")
+    rowAll = cursor.fetchall()
+
+    for i in range(len(rowAll)):
+        if rtspurl == rowAll[i][2]:
+            return jsonify({'success': False, 'msg': '该摄像头已经存在,请重新设置.'})
+        else:
+            continue
+    cursor.execute('''INSERT INTO camera (username,password,rtspurl) VALUES (?,?,?)''',
+                   (usernmae, password, rtspurl))
+
     # 提交
     conn.commit()
     conn.close()
@@ -87,8 +93,31 @@ def prevCamera():
         data.append(
             {f"id": i+1, "username": rowAll[i][0], "password": rowAll[i][1], "rtspurl": rowAll[i][2]})
     conn.close()
-    print(data)
+    # print(data)
     return data
+    # return jsonify({"username": "daito", "password": "daito", "email": "2462491568@qq.com"})
+
+
+@app.route('/preview/deleteURL', methods=['POST'])
+def deleteURL():
+    rtspurl = request.json['rtspurl']
+    print(rtspurl)
+    if rtspurl:
+        # 查询数据库中的rtsp
+        conn, cursor = connSqlite('admin.db')
+
+        cursor.execute("DELETE FROM camera WHERE rtspurl=?",
+                       (rtspurl,))  # 只有一个条件时,必须这个写
+        conn.commit()
+        conn.close()
+        return jsonify({'success': True, 'msg': '成功删除该摄像头'})
+    return jsonify({'success': False, 'msg': '流地址为空,请选择一个流地址'})
+
+
+@app.route('/control', methods=['POST'])
+def control():
+    print("control")
+    pass
 
 
 if __name__ == "__main__":

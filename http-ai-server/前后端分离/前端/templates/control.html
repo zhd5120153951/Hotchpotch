@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>preview</title>
+    <title>control</title>
     <link type="text/css" href="../static/layui-v2.9.7/layui/css/layui.css" rel="stylesheet">
 </head>
 
@@ -12,19 +12,23 @@
     <table class="layui-hide" id="test" lay-filter="test"></table>
     <script type="text/html" id="barDemo">
         <div class="layui-clear-space">
-            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-            <a class="layui-btn layui-btn-xs" lay-event="delete">
-                删除
+            <a class="layui-btn layui-btn-xs" lay-event="control">编辑布控</a>
+            <a class="layui-btn layui-btn-xs" lay-event="cancel">
+                取消布控
             </a>
         </div>
     </script>
+    <div id="customLayer" style="display: none;">
+        <h1>这是一个自定义层</h1>
+        <p>你可以在这里放置任何 HTML 内容。</p>
+    </div>
 
     <script src="../static/layui-v2.9.7/layui/layui.js"></script>
     <script>
         var temp = null;
         layui.use('table', function () {
             var table = layui.table;
-            //向后端发起请求
+            //向preview接口请求摄像头数据
             fetch("http://127.0.0.1:5001/preview")
                 .then(response => {
                     //检查状态码
@@ -45,7 +49,7 @@
                             { field: 'id', title: '排序', width: 80, sort: true },
                             { field: 'username', title: '用户名', width: 120 },
                             { field: 'password', title: '密码', width: 120 },
-                            { field: 'rtspurl', title: '流地址<i class="layui-icon layui-icon-tips layui-font-14 layui-event="rtsp-tips" title="该字段可以编辑" style="margin-left:5px;"></i>', fieldTitle: '流地址', hide: 0, minWidth: 320, expandedMode: 'tips', edit: 'text' },
+                            { field: 'rtspurl', title: '流地址', minWidth: 320 },
                             { fixed: 'right', title: '操作', width: 320, minWidth: 125, toolbar: '#barDemo' }
                         ]],
                         data: data,
@@ -58,25 +62,22 @@
                     temp = data;
                 });
 
-            //表单工具栏的点击事件
+            //表单工具栏的点击事件--lay-event
             table.on('tool(test)', function (obj) {
+
                 var data = obj.data;
-                if (obj.event === 'edit') {
+                if (obj.event === 'control') {
                     layer.open({
-                        title: '编辑 - id:' + data.id,
+                        title: '布控摄像头 - id:' + data.id,
                         type: 1,
-                        area: ['80%', '80%'],
-                        content: '<div style="padding: 16px;">自定义表单元素</div>'
+                        content: 'sfdef',
+                        area: ['80%', '80%']
                     })
                 }
-                else if (obj.event === 'delete') {
-                    // layer.alert(JSON.stringify(temp[data.id - 1]['rtspurl']), {
-                    //     title: "value"
-                    // });
-                    // return false;
-                    layer.confirm('真的删除行 [id: ' + data.id + '] 么', function (index) {
-                        obj.del();//删除对应行tr的DOM结构
-                        layer.close(index);
+                else if (obj.event === 'cancel') {
+
+                    layer.confirm('真的删除行 [id: ' + data.id + '] 布控?', function (index) {
+
                         //向服务端发送删除指令post
                         fetch("http://127.0.0.1:5001/preview/deleteURL", {
                             method: "POST",
@@ -103,36 +104,6 @@
 
 
             })
-
-            // 表单单元格编辑事件
-            table.on('edit(test)', function (obj) {
-                var field = obj.field; // 得到字段
-                var value = obj.value; // 得到修改后的值
-                var data = obj.data; // 得到所在行所有键值
-                // 编辑的流格式校验
-                if (field === 'rtspurl') {
-                    const reg = /^rtsp:\/\/([a-z]{0,10}:.{0,15}@)?(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
-
-                    const reg1 = /^rtsp:\/\/([a-z]{0,10}:.{0,15}@)?(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5]):[0-9]{1,5}/;
-
-                    const reg2 = /^rtsp:\/\/([a-z]{0,10}:.{0,15}@)?(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\//;
-
-                    if (reg.test(obj.value) || reg1.test(obj.value) || reg2.test(obj.value)) {
-                        // 编辑后续操作，如提交更新请求，以完成真实的数据更新
-                        layer.msg('编辑成功', { icon: 1 });
-                        // 其他更新操作
-                        var update = {};
-                        update[field] = value;
-                        obj.update(update);
-                    }
-                    else {
-                        layer.tips('输入的流地址格式不正确,请重新编辑.', this, { tips: 1 });
-                        return obj.reedit();
-                    }
-                }
-
-            });
-
         });
     </script>
 
