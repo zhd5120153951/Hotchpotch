@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html>
 
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>preview</title>
-        <link type="text/css" href="../static/layui-v2.9.7/layui/css/layui.css"
-            rel="stylesheet">
-    </head>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>preview</title>
+    <link type="text/css" href="../static/layui-v2.9.7/layui/css/layui.css" rel="stylesheet">
+</head>
 
-    <body>
-        <table class="layui-hide" id="test" lay-filter="test"></table>
-        <script type="text/html" id="barDemo">
+<body>
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+    <script type="text/html" id="barDemo">
         <div class="layui-clear-space">
             <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-xs" lay-event="delete">
@@ -20,8 +19,8 @@
         </div>
     </script>
 
-        <script src="../static/layui-v2.9.7/layui/layui.js"></script>
-        <script>
+    <script src="../static/layui-v2.9.7/layui/layui.js"></script>
+    <script>
         var temp = null;
         layui.use('table', function () {
             var table = layui.table;
@@ -63,18 +62,36 @@
             table.on('tool(test)', function (obj) {
                 var data = obj.data;
                 if (obj.event === 'edit') {
-                    layer.open({
-                        title: '编辑 - id:' + data.id,
-                        type: 1,
-                        area: ['80%', '80%'],
-                        content: '<div style="padding: 16px;">自定义表单元素</div>'
-                    })
+                    // 表单单元格编辑事件
+                    table.on('edit(test)', function (obj) {
+                        var field = obj.field; // 得到字段
+                        var value = obj.value; // 得到修改后的值
+                        var data = obj.data; // 得到所在行所有键值
+                        // 编辑的流格式校验
+                        if (field === 'rtspurl') {
+                            const reg = /^rtsp:\/\/([a-z]{0,10}:.{0,15}@)?(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+
+                            const reg1 = /^rtsp:\/\/([a-z]{0,10}:.{0,15}@)?(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5]):[0-9]{1,5}/;
+
+                            const reg2 = /^rtsp:\/\/([a-z]{0,10}:.{0,15}@)?(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\//;
+
+                            if (reg.test(obj.value) || reg1.test(obj.value) || reg2.test(obj.value)) {
+                                // 提交到后端接口，以完成真实的数据更新
+                                layer.msg('编辑成功', { icon: 1 });
+                                // 其他更新操作
+                                var update = {};
+                                update[field] = value;
+                                obj.update(update);
+                            }
+                            else {
+                                layer.tips('输入的流地址格式不正确,请重新编辑.', this, { tips: 1 });
+                                return obj.reedit();
+                            }
+                        }
+
+                    });
                 }
                 else if (obj.event === 'delete') {
-                    // layer.alert(JSON.stringify(temp[data.id - 1]['rtspurl']), {
-                    //     title: "value"
-                    // });
-                    // return false;
                     layer.confirm('真的删除行 [id: ' + data.id + '] 么', function (index) {
                         obj.del();//删除对应行tr的DOM结构
                         layer.close(index);
@@ -105,38 +122,11 @@
 
             })
 
-            // 表单单元格编辑事件
-            table.on('edit(test)', function (obj) {
-                var field = obj.field; // 得到字段
-                var value = obj.value; // 得到修改后的值
-                var data = obj.data; // 得到所在行所有键值
-                // 编辑的流格式校验
-                if (field === 'rtspurl') {
-                    const reg = /^rtsp:\/\/([a-z]{0,10}:.{0,15}@)?(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
 
-                    const reg1 = /^rtsp:\/\/([a-z]{0,10}:.{0,15}@)?(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5]):[0-9]{1,5}/;
-
-                    const reg2 = /^rtsp:\/\/([a-z]{0,10}:.{0,15}@)?(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\//;
-
-                    if (reg.test(obj.value) || reg1.test(obj.value) || reg2.test(obj.value)) {
-                        // 编辑后续操作，如提交更新请求，以完成真实的数据更新
-                        layer.msg('编辑成功', { icon: 1 });
-                        // 其他更新操作
-                        var update = {};
-                        update[field] = value;
-                        obj.update(update);
-                    }
-                    else {
-                        layer.tips('输入的流地址格式不正确,请重新编辑.', this, { tips: 1 });
-                        return obj.reedit();
-                    }
-                }
-
-            });
 
         });
     </script>
 
-    </body>
+</body>
 
 </html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Demo</title>
+    <!-- 请勿在项目正式环境中引用该 layui.css 地址 -->
+    <link href="../static/layui-v2.9.7/layui/css/layui.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="layui-container">
+
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">得分阈值:</label>
+                    <div class="layui-input-inline layui-input-wrap">
+                        <input type="text" name="scoreTh" lay-verify="required" autocomplete="off" lay-reqtext="请输入阈值"
+                            lay-affix="clear" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid" style="padding: 0!important;">
+
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">IOU阈值:</label>
+                <div class="layui-input-inline layui-input-wrap">
+                    <input type="text" name="iouTh" lay-verify="required" autocomplete="off" lay-affix="clear"
+                        class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">备注:</label>
+                <div class="layui-input-block" style="width: 320px;">
+                    <textarea placeholder="请输入内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="submit" class="layui-btn" lay-submit lay-filter="submit">提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- 请勿在项目正式环境中引用该 layui.js 地址 -->
+    <script src="../static/layui-v2.9.7/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'laydate', 'util'], function () {
+            var form = layui.form;
+            var layer = layui.layer;
+            var laydate = layui.laydate;
+            var util = layui.util;
+
+            // 提交事件
+            form.on('submit(submit)', function (data) {
+                var field = data.field; // 获取表单字段值
+                // 显示填写结果，仅作演示用
+                layer.alert(JSON.stringify(field), {
+                    title: '当前填写的字段值'
+                });
+                // 此处可执行 Ajax 等操作--发送到后端,试试能否直接发送到AI端
+                fetch("http://127.0.0.1:9003/image/objectDetect", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ "scoreTh": data.scoreTh, "iouTh": data.iouTh })
+                })
+                    .then(response => response.json())
+                    .then(ret => {
+                        if (ret.code === 1000) {
+                            layer.alert(ret.msg);
+                        } else {
+                            layer.alert(ret.msg);
+                        }
+                    })
+                    .catch(error => {
+                        layer.alert(error, { title: '意外错误' });
+                    });
+                return false; // 阻止默认 form 跳转
+            });
+        });
+    </script>
+
+</body>
+
+</html>
