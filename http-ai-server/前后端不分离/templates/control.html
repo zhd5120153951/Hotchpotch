@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>control</title>
-    <link type="text/css" href="../static/layui/css/layui.css" rel="stylesheet">
-</head>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>control</title>
+        <link type="text/css" href="../static/layui/css/layui.css"
+            rel="stylesheet">
+    </head>
 
-<body>
-    <table class="layui-hide" id="test" lay-filter="test"></table>
-    <script type="text/html" id="barDemo">
+    <body>
+        <table class="layui-hide" id="test" lay-filter="test"></table>
+        <script type="text/html" id="barDemo">
         <div class="layui-clear-space">
             <a class="layui-btn layui-btn-xs" lay-event="control">编辑布控</a>
 
             <a class="layui-btn layui-btn-xs" lay-event="cancel">取消布控</a>
         </div>
     </script>
-    <script src="../static/layui/layui.js"></script>
-    <script>
+        <script src="../static/layui/layui.js"></script>
+        <script>
         var temp = null;
         layui.use('table', function () {
             var table = layui.table;
@@ -62,39 +63,24 @@
                 var data = obj.data;
                 if (obj.event === 'control') {
                     // 可以先向后端发送请求数据,再渲染布控界面吧
-                    fetch("http://127.0.0.1:5001/video_frame", {
-                        method: "POST",
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ "rtspurl": temp[data.id - 1]['rtspurl'] })
-                    })
-                        .then(response => response.json())
-                        .then(ret => {
-                            if (ret.success) {
-                                // window.location.href = 'editcontrol';//发送成功,页面跳转
-                                layer.open({
-                                    title: '布控摄像头 - id:' + data.id,
-                                    type: 2,
-                                    area: ['80%', '80%'],
-                                    resize: false,
-                                    maxmin: true,
-                                    shadeClose: true,
-                                    content: '/editcontrol'
-                                });
-                            }
-                            else {
-                                layer.msg(ret.msg);
-                            }
-                        })
-                        .catch(error => {
-                            layer.alert(error, { title: '意外错误' });
-                        });
+                    
+                    window.location.href = 'editcontrol';//发送成功,页面跳转
+                    // layer.open({
+                    //     title: '布控摄像头 - id:' + data.id,
+                    //     type: 2,
+                    //     area: ['80%', '80%'],
+                    //     resize: false,
+                    //     maxmin: true,
+                    //     shadeClose: true,
+                    //     content: '/editcontrol'
+                    // });
                 }
                 else if (obj.event === 'cancel') {
 
                     layer.confirm('真的删除行 [id: ' + data.id + '] 布控?', function (index) {
 
                         //向服务端发送删除指令post
-                        fetch("http://127.0.0.1:5001/preview/deleteURL", {
+                        fetch("/preview/deleteURL", {
                             method: "POST",
                             headers: {
                                 'Content-Type': 'application/json'
@@ -115,13 +101,10 @@
                     });
 
                 }
-
-
-
             })
         });
     </script>
 
-</body>
+    </body>
 
 </html>

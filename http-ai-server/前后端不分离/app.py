@@ -109,5 +109,37 @@ def config_control():
     return render_template('editcontrol.html')
 
 
+class VideoCamera(object):
+    def __init__(self, rtspurl):
+        # 通过opencv获取实时视频流
+        self.video = cv2.VideoCapture(rtspurl)
+
+    def __del__(self):
+        self.video.release()
+
+    def get_frame(self):
+        success, image = self.video.read()
+        # 因为opencv读取的图片并非jpeg格式，因此要用motion JPEG模式需要先将图片转码成jpg格式图片
+        jpeg = cv2.imencode('.jpg', image)[1].tobytes()
+        return jpeg
+
+
+def video_gen(camera):
+    cap = cv2.VideoCapture(camera)
+    while cap.isOpened():
+        print("while>>>>>>>>>>>>>>>>>>>>>>")
+        ret, frame = cap.read()
+        # 使用generator函数输出视频流， 每次请求输出的content类型是image/jpeg
+        if not ret:
+            continue
+        frame = cv2.imencode('.jpg', frame)[1].tobytes()
+        yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+
+@app.route('/video_view')
+def video_view():
+    return Response(video_gen(0), mimetype='multipart/x-mixed-replace;bounddary=frame')
+
+
 if __name__ == '__main__':
     app.run(debug=True)
