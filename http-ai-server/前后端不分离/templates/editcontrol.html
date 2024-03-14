@@ -10,10 +10,9 @@
 </head>
 
 <body>
-
     <div class="layui-container">
-
         <form class="layui-form" action="">
+            <img src="{{ url_for('video_view') }}" style="width: 640px;height: 480px;" />
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">得分阈值:</label>
@@ -26,6 +25,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="layui-form-item">
                 <label class="layui-form-label">IOU阈值:</label>
                 <div class="layui-input-inline layui-input-wrap">
@@ -40,6 +40,7 @@
                     <textarea placeholder="请输入内容" class="layui-textarea"></textarea>
                 </div>
             </div>
+
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button type="submit" class="layui-btn" lay-submit lay-filter="submit">提交</button>
@@ -65,25 +66,25 @@
                 layer.alert(JSON.stringify(field), {
                     title: '当前填写的字段值'
                 });
-                // 此处可执行 Ajax 等操作--发送到后端,试试能否直接发送到AI端
-                fetch("http://127.0.0.1:9003/image/objectDetect", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ "scoreTh": data.scoreTh, "iouTh": data.iouTh })
-                })
-                    .then(response => response.json())
-                    .then(ret => {
-                        if (ret.code === 1000) {
-                            layer.alert(ret.msg);
-                        } else {
-                            layer.alert(ret.msg);
-                        }
-                    })
-                    .catch(error => {
-                        layer.alert(error, { title: '意外错误' });
-                    });
+                // 此处可执行 Ajax 等操作--发送到后端,试试能否直接发送到AI端--可以直接发到AI端
+                // fetch("http://127.0.0.1:9003/image/objectDetect", {
+                //     method: "POST",
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     },
+                //     body: JSON.stringify({ "scoreTh": data.scoreTh, "iouTh": data.iouTh })
+                // })
+                //     .then(response => response.json())
+                //     .then(ret => {
+                //         if (ret.code === 1000) {
+                //             layer.alert(ret.msg);
+                //         } else {
+                //             layer.alert(ret.msg);
+                //         }
+                //     })
+                //     .catch(error => {
+                //         layer.alert(error, { title: '意外错误' });
+                //     });
                 return false; // 阻止默认 form 跳转
             });
         });

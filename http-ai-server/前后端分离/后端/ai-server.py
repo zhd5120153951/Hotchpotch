@@ -1,9 +1,8 @@
 import json
+from turtle import rt
 import cv2
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
-from h11 import Response
-from pkg_resources import yield_lines
 import requests
 import sqlite3
 
@@ -115,11 +114,46 @@ def deleteURL():
     return jsonify({'success': False, 'msg': '流地址为空,请选择一个流地址'})
 
 
-@app.route('/control', methods=['POST'])
-def control():
-    print("control")
-    pass
+@app.route('/video_frame', methods=['POST'])
+def video_frame():
+    global rtspurl
+    rtspurl = request.json['rtspurl']
+    print(rtspurl)
+    if rtspurl:
+        return jsonify({'success': True, 'msg': rtspurl})
+    return jsonify({'success': False, 'msg': '流地址出错'})
+
+
+class VideoCamera(object):
+    def __init__(self, rtspurl):
+        # 通过opencv获取实时视频流
+        self.video = cv2.VideoCapture(rtspurl)
+
+    def __del__(self):
+        self.video.release()
+
+    def get_frame(self):
+        success, image = self.video.read()
+        # 因为opencv读取的图片并非jpeg格式，因此要用motion JPEG模式需要先将图片转码成jpg格式图片
+        ret, jpeg = cv2.imencode('.jpg', image)
+        return jpeg.tobytes()
+
+
+def video_gen(camera):
+    while True:
+        frame = camera.get_frame()
+        # 使用generator函数输出视频流， 每次请求输出的content类型是image/jpeg
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+
+
+@app.route('/video_view')
+def video_view():
+    global rtspurl
+    print(rtspurl, 2)
+    return Response(video_gen(VideoCamera(rtspurl)), mimetype='multipart/x-mixed-replace;bounddary=frame')
 
 
 if __name__ == "__main__":
+    rtspurl = None
     app.run(host='0.0.0.0', port=5001, debug=True)

@@ -9,12 +9,16 @@ s.listen(5)  # 可监听数量
 
 # 图像数据压缩转字节
 def mat2byte(cvmat):
-    img_bytes = cv2.imencode('.jpg', cvmat, [1, 20])[1].tobytes()  # 仅保留20%的数据量 可自行涉及
+    img_bytes = cv2.imencode('.jpg', cvmat, [1, 20])[
+        1].tobytes()  # 仅保留20%的数据量 可自行涉及
     return img_bytes
 
 
 if __name__ == "__main__":
-    capture = cv2.VideoCapture(0)  # 读取摄像头\视频\rtsp流
+    # capture = cv2.VideoCapture(0)  # 读取摄像头\视频\rtsp流
+    capture = cv2.VideoCapture(
+        "rtsp://admin:jiankong123@192.168.23.15:554/Streaming/Channels/101")  # 读取摄像头\视频\rtsp流
+
     ref, frame = capture.read()
 
     if not ref:

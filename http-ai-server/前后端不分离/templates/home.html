@@ -1,44 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Processing</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>home</title>
+    <link type="text/css" href="../static/layui/css/layui.css" rel="stylesheet">
 </head>
 
 <body>
-    <h1>Data Processing</h1>
-    <form id="dataForm">
-        <label for="data">Enter Data:</label>
-        <input type="text" name="data" id="dataInput" required><br>
+    <div class="layui-btn-container">
+        <button id="addBtn" type="button" class="layui-btn layui-btn-lg layui-btn-primary layui-btn-radius"
+            style="position:fixed;top: 100px;right: 960px;">
+            <i class="layui-icon layui-icon-camera-fill"></i>
+            添加摄像头</button>
+        <a href="{{ url_for('preview') }}" class="layui-btn" target="_blank"
+            style="position: fixed;top: 100px;right: 840px;">
+            <i class="layui-icon layui-icon-eye"></i>
+            预览</a>
+        <button id="controlBtn" type="button" class="layui-btn layui-btn-lg layui-btn-normal"
+            style="position: fixed;top: 100px;right: 720px;">
+            <i class="layui-icon layui-icon-console"></i> 布控
+        </button>
+        <button id="warnBtn" type="button" class="layui-btn layui-btn-lg layui-btn-normal"
+            style="position: fixed;top: 100px;right: 600px;">
+            <i class="layui-icon layui-icon-tips-fill"></i> 报警
+        </button>
+    </div>
 
-        <button type="button" onclick="submitForm()">Submit</button>
-    </form>
-
-    <p id="result"></p>
-
-    <script>
-        function submitForm() {
-            var data = document.getElementById('dataInput').value;
-            alert("前端开始发送http请求");
-            // 前后端不分离情况
-            // 使用 JavaScript 的 Fetch API 向后端发送数据
-            fetch('/process_data', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'data=' + encodeURIComponent(data),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    // 处理后端返回的结果
-                    document.getElementById('result').innerText = 'Result: ' + data.result;
-                });
-        }
-    </script>
 </body>
+<script src="../static/layui/layui.js"></script>
+
+<script>
+    const addBtn = document.getElementById('addBtn');
+    const controlBtn = document.getElementById('controlBtn');
+    const warnBtn = document.getElementById('warnBtn');
+
+    addBtn.addEventListener('click', function () {
+        window.location.href = "camera";//设置路由
+    });
+    controlBtn.addEventListener('click', function () {
+        window.location.href = "control";
+    });
+    warnBtn.addEventListener('click', function () {
+        window.location.href = "warn";
+    });
+
+</script>
 
 </html>
