@@ -1,7 +1,6 @@
 from flask import Flask, Response, render_template, request, jsonify, url_for
 from flask_cors import CORS
 import cv2
-import requests
 import sqlite3
 
 
@@ -124,21 +123,26 @@ class VideoCamera(object):
         return jpeg
 
 
-def video_gen(camera):
-    cap = cv2.VideoCapture(camera)
-    while cap.isOpened():
-        print("while>>>>>>>>>>>>>>>>>>>>>>")
-        ret, frame = cap.read()
+def video_gen():
+    cap = cv2.VideoCapture(
+        "rtsp://admin:jiankong123@192.168.23.15:554/Streaming/Channels/101")
+    while True:
+        success, frame = cap.read()
         # 使用generator函数输出视频流， 每次请求输出的content类型是image/jpeg
-        if not ret:
-            continue
-        frame = cv2.imencode('.jpg', frame)[1].tobytes()
+        if not success:
+            cap.release()
+            cap = cv2.VideoCapture(
+                "rtsp://admin:jiankong123@192.168.23.15:554/Streaming/Channels/101")
+            break
+        ret, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+        print(1)
         yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
 @app.route('/video_view')
 def video_view():
-    return Response(video_gen(0), mimetype='multipart/x-mixed-replace;bounddary=frame')
+    return Response(video_gen(), mimetype='multipart/x-mixed-replace;bounddary=frame')
 
 
 if __name__ == '__main__':
