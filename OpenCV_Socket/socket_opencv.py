@@ -1,5 +1,6 @@
 import socket
 import cv2
+# 网页访问地址
 # http://localhost:4399/camera
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # tcp协议
