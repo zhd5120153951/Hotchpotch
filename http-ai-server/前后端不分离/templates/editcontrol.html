@@ -11,8 +11,8 @@
 
 <body>
     <div class="layui-container">
+        <img src="{{ url_for('video_view') }} " style="width: 640px;height: 480px;">
         <form class="layui-form" action>
-
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">得分阈值:</label>
@@ -68,24 +68,24 @@
                     title: '当前填写的字段值'
                 });
                 // 此处可执行 Ajax 等操作--发送到后端,试试能否直接发送到AI端--可以直接发到AI端
-                fetch("http://127.0.0.1:9003/image/objectDetect", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ "scoreTh": data.scoreTh, "iouTh": data.iouTh })
-                })
-                    .then(response => response.json())
-                    .then(ret => {
-                        if (ret.code === 1000) {
-                            layer.alert(ret.msg);
-                        } else {
-                            layer.alert(ret.msg);
-                        }
-                    })
-                    .catch(error => {
-                        layer.alert(error, { title: '意外错误' });
-                    });
+                // fetch("http://127.0.0.1:9003/image/objectDetect", {
+                //     method: "POST",
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     },
+                //     body: JSON.stringify({ "scoreTh": data.scoreTh, "iouTh": data.iouTh })
+                // })
+                //     .then(response => response.json())
+                //     .then(ret => {
+                //         if (ret.code === 1000) {
+                //             layer.alert(ret.msg);
+                //         } else {
+                //             layer.alert(ret.msg);
+                //         }
+                //     })
+                //     .catch(error => {
+                //         layer.alert(error, { title: '意外错误' });
+                //     });
                 return false; // 阻止默认 form 跳转
             });
         });
