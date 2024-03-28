@@ -14,11 +14,6 @@ import os
 import threading
 from threading import Lock, Thread
 
-# 传入的视频路径和输出图像路径
-video_path = 'D:\\FilePackage\\BaiduDiskDownload\\gas\\'
-img_path = 'D:\\FilePackage\\BaiduDiskDownload\\zhongjie-img'
-filelist = os.listdir(video_path)
-
 
 def video2img(filename, i):
     cnt = 0
@@ -48,6 +43,11 @@ def video2img(filename, i):
 
 
 if __name__ == '__main__':
+    # 传入的视频路径和输出图像路径
+    video_path = 'D:\\FilePackage\\gaoqiang\\'
+    img_path = 'D:\\FilePackage\\plate-img'
+
+    filelist = os.listdir(video_path)
     for i, filename in enumerate(filelist):
         print(filename)
         threading.Thread(target=video2img, args=(filename, i)).start()
