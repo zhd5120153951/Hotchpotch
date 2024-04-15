@@ -11,46 +11,52 @@
 @Email      :2462491568@qq.com
 '''
 
-##8000张图--car,person
+# 8000张图--car,person
 import os
 from pathlib import Path
 import pandas as pd
 import cv2
 
-alphabet = ['person', 'bicycle', 'car']
+# alphabet = ['person', 'bicycle', 'car']
+alphabet = ['fire', 'smoke', 'car']
 
-label_root = Path("D://FilePackage//datasets//gas2_txt")  # 替换为实际的标注文件夹路径
-image_root = Path("D://FilePackage//datasets/gas2")  # 替换为实际的图像文件夹路径
-output_root = Path("D://FilePackage//datasets//yolo2img")  # 替换为实际的输出文件夹路径
+
+label_root = Path("F:\\DataSet\\yolo_format_fire\\train_txt")  # 替换为实际的标注文件夹路径
+image_root = Path("F:\\DataSet\\yolo_format_fire\\train_img")  # 替换为实际的图像文件夹路径
+output_root = Path("F:\\DataSet\\yolo_format_fire\\yolo2img")  # 替换为实际的输出文件夹路径
 
 
 def paint(label_file, image_file, output_file):
     try:
         # 读取标签
-        df = pd.read_csv(label_file, sep=" ", names=['id', 'center-x', 'center-y', 'w', 'h'])
+        df = pd.read_csv(label_file, sep=" ", names=[
+                         'id', 'center-x', 'center-y', 'w', 'h'])
         df['id'] = df['id'].apply(lambda x: alphabet[x])
         df = df.sort_values(by='center-x')
         # 读取图片
         img = cv2.imread(str(image_file))
         h, w = img.shape[:2]
 
-        #作用是把df[['center-x','w']]对应的值(txt中)--传到x,并x*w,最后覆盖到df[['center-x','w']]的值
-        #简单说就是把x,y,w,h由比例--数值
+        # 作用是把df[['center-x','w']]对应的值(txt中)--传到x,并x*w,最后覆盖到df[['center-x','w']]的值
+        # 简单说就是把x,y,w,h由比例--数值
         df[['center-x', 'w']] = df[['center-x', 'w']].apply(lambda x: x * w)
         df[['center-y', 'h']] = df[['center-y', 'h']].apply(lambda x: x * h)
-        #画框需要知道左上,右下坐标
+        # 画框需要知道左上,右下坐标
         df['x1'] = df['center-x'] - df['w'] / 2
         df['x2'] = df['center-x'] + df['w'] / 2
         df['y1'] = df['center-y'] - df['h'] / 2
         df['y2'] = df['center-y'] + df['h'] / 2
 
-        df[['x1', 'x2', 'y1', 'y2']] = df[['x1', 'x2', 'y1', 'y2']].astype('int')
+        df[['x1', 'x2', 'y1', 'y2']] = df[[
+            'x1', 'x2', 'y1', 'y2']].astype('int')
 
         points = zip(df['x1'], df['y1'], df['x2'], df['y2'], df['id'])
         for point in points:
             x1, y1, x2, y2, label = point
-            img = cv2.rectangle(img, (x1, y1), (x2, y2), color=(0, 255, 0), thickness=1)
-            cv2.putText(img, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), thickness=1)
+            img = cv2.rectangle(img, (x1, y1), (x2, y2),
+                                color=(0, 255, 0), thickness=1)
+            cv2.putText(img, label, (x1, y1 - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), thickness=1)
         cv2.imwrite(str(output_file), img)
         print('Generated:', output_file)
     except Exception as e:

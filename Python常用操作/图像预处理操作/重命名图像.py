@@ -1,7 +1,7 @@
 import os
 
 
-#重命名文件名
+# 重命名文件名
 def rename_files(folder_path, new_name_prefix):
     """
     将文件夹中的文件按照给定前缀和序号进行批量重命名。
@@ -19,7 +19,8 @@ def rename_files(folder_path, new_name_prefix):
         print(filename)
         # 构建新文件名
         file_ext = os.path.splitext(filename)[1]  # 获取文件扩展名
-        new_filename = f"{new_name_prefix}{start_number:05d}{file_ext}"  # 使用3位序号，并在左侧补0
+        # 使用3位序号，并在左侧补0
+        new_filename = f"{new_name_prefix}{start_number:05d}{file_ext}"
         # 构建文件的完整路径
         old_filepath = os.path.join(folder_path, filename)
         new_filepath = os.path.join(folder_path, new_filename)
@@ -32,7 +33,7 @@ def rename_files(folder_path, new_name_prefix):
     print("rename file successfully")
 
 
-#重命名后缀为jpg文件
+# 重命名后缀为jpg文件
 def rename_Img(path_orig, path_dst):
     imgList = os.listdir(path_orig)
     for img in imgList:
@@ -46,17 +47,18 @@ def rename_Img(path_orig, path_dst):
                 continue
 
 
-def selectBySuffiex(jpgPath, txtPath, new_name_prefix):
+def selectBySuffiex(jpgPath, txtPath, new_name_prefix, start_number):
     imgList = os.listdir(jpgPath)
     txtList = os.listdir(txtPath)
-    start_number = 1
+    # start_number = 1
     for img in imgList:
         # 构建新文件名
         file_ext_jpg = os.path.splitext(img)[1]  # 获取文件扩展名
         for txt in txtList:
             file_ext_txt = os.path.splitext(txt)[1]
-            if os.path.splitext(img)[0] == os.path.splitext(txt)[0]:  #同名
-                new_filename = f"{new_name_prefix}{start_number:05d}{file_ext_jpg}"  # 使用5位序号，并在左侧补0
+            if os.path.splitext(img)[0] == os.path.splitext(txt)[0]:  # 同名
+                # 使用5位序号，并在左侧补0
+                new_filename = f"{new_name_prefix}{start_number:05d}{file_ext_jpg}"
                 new_txtname = f"{new_name_prefix}{start_number:05d}{file_ext_txt}"
                 # 构建文件的完整路径
                 old_filepath = os.path.join(jpgPath, img)
@@ -74,9 +76,10 @@ def selectBySuffiex(jpgPath, txtPath, new_name_prefix):
 if __name__ == "__main__":
     # folder_path = 'D:\\FilePackage\\datasets\\Object Detect\\fire\\images\\val'
     # folder_path = 'D:\\FilePackage\\datasets\\Object Detect\\fire\\images\\train\\背景图'
-    jpgPath = 'D:\\FilePackage\\datasets\\gas2'
-    txtPath = 'D:\\FilePackage\\datasets\\gas2_txt'
+    jpgPath = 'F:\\DataSet\\yolo_format_fire\\val_img'
+    txtPath = 'F:\\DataSet\\yolo_format_fire\\val_txt'
     # folder_path = 'D:\\FilePackage\\datasets\\gas'
-    new_name_prefix = 'gas2_'
+    new_name_prefix = 'fire_4_'
+    start_number = 1
     # rename_files(folder_path, new_name_prefix)
-    selectBySuffiex(jpgPath, txtPath, new_name_prefix)
+    selectBySuffiex(jpgPath, txtPath, new_name_prefix, start_number)

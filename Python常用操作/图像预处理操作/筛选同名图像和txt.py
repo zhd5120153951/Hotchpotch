@@ -18,23 +18,25 @@ from PIL import Image
 def filter_same_name_imgtxt(img_path, txt_path, save_path):
     # start_number = 1
     for img_name in os.listdir(img_path):
-        preffixe_img = os.path.splitext(img_name)[0]  #img名
+        preffixe_img = os.path.splitext(img_name)[0]  # img名
         for txt_name in os.listdir(txt_path):
-            preffixe_txt = os.path.splitext(txt_name)[0]  #txt名
+            preffixe_txt = os.path.splitext(txt_name)[0]  # txt名
             if preffixe_img != preffixe_txt:
                 continue
             else:
                 source_txt_path = os.path.join(txt_path, txt_name)
+                source_img_path = os.path.join(img_path, img_name)
                 shutil.copy(source_txt_path, save_path)
+                shutil.copy(source_img_path, save_path)
             # start_number += 1
 
 
 if __name__ == '__main__':
-    img_path = 'D:\\FilePackage\\datasets\\gas'
-    txt_path = 'D:\\FilePackage\\datasets\\chimney.v2i.yolov5pytorch\\train\labels'
+    img_path = 'F:\\DataSet\\yolo_format_smoke\\images'
+    txt_path = 'F:\\DataSet\\fire-smoke-all\\labels'
     # txt_path = 'D:\\FilePackage\\datasets\\SmokeDetection\\train\\labels'
-    save_path = 'D:\\FilePackage\\datasets\\gas2_txt'
-    filered_img = filter_same_name_imgtxt(img_path, txt_path, save_path)
+    save_path = 'F:\\DataSet\\temp_smoke'
+    filter_same_name_imgtxt(img_path, txt_path, save_path)
     # 打印筛选后的图像
     # for img in filered_img:
     #     print(img)
