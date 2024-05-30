@@ -9,10 +9,15 @@
 @version    :1.0
 @Email      :2462491568@qq.com
 '''
+from email import header
 import time
 import multiprocessing as mp
 import cv2
 import numpy as np
+import base64
+import requests
+import json
+
 """
 多进程读取摄像头，多线程读取
 https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_gui/py_video_display/py_video_display.html
@@ -28,24 +33,48 @@ rtsp_path_hikvison = "rtsp://%s:%s@%s//Streaming/Channels/%d" % (user, pwd, ip, 
 
 
 def image_put(q, user, pwd, ip, channel=101):
-    cap = cv2.VideoCapture("rtsp://%s:%s@%s/Streaming/Channels/%d" % (user, pwd, ip, channel))
+    cap = cv2.VideoCapture(
+        "rtsp://%s:%s@%s/Streaming/Channels/%d" % (user, pwd, ip, channel))
     if cap.isOpened():
         print('HIKVISION')
     else:
-        cap = cv2.VideoCapture("rtsp://%s:%s@%s/cam/realmonitor?channel=%d&subtype=0" % (user, pwd, ip, channel))
+        cap = cv2.VideoCapture(
+            "rtsp://%s:%s@%s/cam/realmonitor?channel=%d&subtype=0" % (user, pwd, ip, channel))
         print('DaHua')
 
     while True:
         q.put(cap.read()[1])
-        q.get() if q.qsize() > 1 else time.sleep(0.01)  #保证帧队列中只有2帧
+        q.get() if q.qsize() > 1 else time.sleep(0.01)  # 保证帧队列中只有2帧
 
 
 def image_get(q, window_name):
-    cv2.namedWindow(window_name, flags=cv2.WINDOW_FREERATIO)
+    # cv2.namedWindow(window_name, flags=cv2.WINDOW_FREERATIO)
     while True:
         frame = q.get()
-        cv2.imshow(window_name, frame)
-        cv2.waitKey(1)
+        encode_img_byte = cv2.imencode(".jpg", frame)[1].tobytes()
+        base64data = base64.b64encode(encode_img_byte).decode('utf-8')
+        # print(base64data)
+        data = {
+            "image": base64data,
+            "id": window_name
+        }
+        ts = time.time()
+        res = requests.post(
+            "http://192.168.22.82:5002/infer", data=json.dumps(data).encode('utf-8'))
+        te = time.time()
+        if res.status_code == 200:
+            print(res.json())
+            print(f"request time:{te-ts}")
+            # json_data = res.json()
+            # ret = json_data[]
+            # id = json_data["id"]
+            # print(f"id:{id} ret:{ret}")
+        else:
+            print(f"响应码:{res.status_code}")
+        time.sleep(1)
+
+        # cv2.imshow(window_name, frame)
+        # cv2.waitKey(1)
 
 
 def run_opencv_camera():
@@ -54,7 +83,9 @@ def run_opencv_camera():
     # cap_path = 0  # local camera (e.g. the front camera of laptop)
     # cap_path = 'video.avi'  # the path of video file
     # cap_path = "rtsp://%s:%s@%s/h264/ch%s/main/av_stream" % (user, pwd, ip, channel)  # HIKIVISION old version 2015
-    cap_path = "rtsp://%s:%s@%s/Streaming/Channels/%d" % (user, pwd, ip, channel)  # HIKIVISION new version 2017
+    # HIKIVISION new version 2017
+    cap_path = "rtsp://%s:%s@%s/Streaming/Channels/%d" % (
+        user, pwd, ip, channel)
     # cap_path = "rtsp://%s:%s@%s/cam/realmonitor?channel=%d&subtype=0" % (user, pwd, ip, channel)  # dahua
 
     cap = cv2.VideoCapture(cap_path)
@@ -62,7 +93,7 @@ def run_opencv_camera():
     while cap.isOpened():
         is_opened, frame = cap.read()
         cv2.imshow('frame', frame)
-        cv2.waitKey(40)  #25帧
+        cv2.waitKey(40)  # 25帧
     cap.release()
 
 
@@ -70,11 +101,12 @@ def run_single_camera():
     # user_name, user_pwd, camera_ip = "admin", "admin123456", "172.20.114.196"
     user_name, user_pwd, camera_ip = "admin", "jiankong123", "192.168.23.15"
 
-    #多进程
+    # 多进程
     mp.set_start_method(method='spawn')  # init
     queue = mp.Queue(maxsize=2)
     processes = [
-        mp.Process(target=image_put, args=(queue, user_name, user_pwd, camera_ip)),
+        mp.Process(target=image_put, args=(
+            queue, user_name, user_pwd, camera_ip)),
         mp.Process(target=image_get, args=(queue, camera_ip))
     ]
 
@@ -85,10 +117,10 @@ def run_single_camera():
 def run_multi_camera():
     user_name, user_pwd = "admin", "jiankong123"
     camera_ip_l = [
-        "192.168.23.10",  # ipv4
-        "192.168.23.11",  # ipv4
-        "192.168.23.12",  # ipv4
+        "192.168.23.15",  # ipv4
         "192.168.23.13",  # ipv4
+        "192.168.23.17",  # ipv4
+        # "192.168.23.13",  # ipv4
         # "[fe80::3aaf:29ff:fed3:d260]",  # ipv6
     ]
 
@@ -97,7 +129,8 @@ def run_multi_camera():
 
     processes = []
     for queue, camera_ip in zip(queues, camera_ip_l):
-        processes.append(mp.Process(target=image_put, args=(queue, user_name, user_pwd, camera_ip)))
+        processes.append(mp.Process(target=image_put, args=(
+            queue, user_name, user_pwd, camera_ip)))
         processes.append(mp.Process(target=image_get, args=(queue, camera_ip)))
 
     for process in processes:
@@ -138,11 +171,12 @@ def run_multi_camera_in_a_window():
     ]
 
     mp.set_start_method(method='spawn')  # init
-    queues = [mp.Queue(maxsize=4) for _ in camera_ip_l]  #为每个摄像头IP分配一个队列queue
+    queues = [mp.Queue(maxsize=4) for _ in camera_ip_l]  # 为每个摄像头IP分配一个队列queue
 
     processes = [mp.Process(target=image_collect, args=(queues, camera_ip_l))]
     for queue, camera_ip in zip(queues, camera_ip_l):
-        processes.append(mp.Process(target=image_put, args=(queue, user_name, user_pwd, camera_ip)))
+        processes.append(mp.Process(target=image_put, args=(
+            queue, user_name, user_pwd, camera_ip)))
     print(len(processes))
     for process in processes:
         process.daemon = True  # setattr(process, 'deamon', True)
@@ -155,7 +189,7 @@ def run():
     # run_opencv_camera()  # slow, with only 1 thread
     # run_single_camera()  # quick, with 2 threads
     run_multi_camera()  # with 1 + n threads
-    run_multi_camera_in_a_window()  # with 1 + n threads
+    # run_multi_camera_in_a_window()  # with 1 + n threads
     pass
 
 

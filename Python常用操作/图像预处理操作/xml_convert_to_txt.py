@@ -7,9 +7,9 @@ import random
 from shutil import copyfile
 
 # 分类名称  这里改成数据集的分类名称，一定要改！！！请查看数据集目录下的txt文件
-CLASSES = ["person", "phone"]
-# 数据集目录 这里改成数据集的根目录，根目录下有两个文件夹Annotations和JPEGImages，一定要改！！！
-PATH = 'D:\FilePackage\datasets\phonecall\labeled\phonecall-ysf'
+CLASSES = ["person", "cigarette"]
+# 数据集目录
+PATH = 'D:\\FilePackage\\datasets\\cigarette'
 # 训练集占比80% 训练集:验证集=8:2 这里划分数据集 不用改
 TRAIN_RATIO = 80
 
@@ -54,7 +54,9 @@ def convert_annotation(image_id):
             difficult = obj.find('difficult').text
         cls = obj.find('name').text
         if cls not in CLASSES or int(difficult) == 1:
+            # cls = "fire-extinguisher"  # 改为自己的命令
             continue
+
         cls_id = CLASSES.index(cls)
         xmlbox = obj.find('bndbox')
         b = (float(xmlbox.find('xmin').text), float(xmlbox.find('xmax').text), float(xmlbox.find('ymin').text),
