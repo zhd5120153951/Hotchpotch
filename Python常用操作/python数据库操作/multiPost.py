@@ -47,19 +47,37 @@ def image_put(q, user, pwd, ip, channel=101):
         q.get() if q.qsize() > 1 else time.sleep(0.01)  # 保证帧队列中只有2帧
 
 
-def image_get(q, window_name):
+def image_get(q, window_name, port):
     # cv2.namedWindow(window_name, flags=cv2.WINDOW_FREERATIO)
+    print(f"http://192.168.22.82:{port}/receive")
     while True:
         frame = q.get()
-        # encode_img_byte = cv2.imencode(".jpg", frame)[1].tobytes()
-        # base64data = base64.b64encode(encode_img_byte).decode('utf-8')
+        encode_img_byte = cv2.imencode(".jpg", frame)[1].tobytes()
+        base64data = base64.b64encode(encode_img_byte).decode('utf-8')
         # print(base64data)
-        # data = {
-        #     "image": base64data,
-        #     "id": window_name
-        # }
-        cv2.imshow(window_name, frame)
-        cv2.waitKey(1)
+        data = {
+            "image": base64data,
+            "id": window_name
+        }
+        ts = time.time()
+        print("post前")
+        res = requests.post(
+            f"http://192.168.22.82:{port}/receive", data=json.dumps(data).encode('utf-8'))
+        print("post后")
+        te = time.time()
+        if res.status_code == 200:
+            print(res.json())
+            print(f"request time:{te-ts}")
+            # json_data = res.json()
+            # ret = json_data[]
+            # id = json_data["id"]
+            # print(f"id:{id} ret:{ret}")
+        else:
+            print(f"响应码:{res.status_code}")
+        time.sleep(1)
+
+        # cv2.imshow(window_name, frame)
+        # cv2.waitKey(1)
 
 
 def run_opencv_camera():
@@ -108,15 +126,16 @@ def run_multi_camera():
         # "192.168.23.13",  # ipv4
         # "[fe80::3aaf:29ff:fed3:d260]",  # ipv6
     ]
-
+    ports = ["5000", "5001", "5002"]
     mp.set_start_method(method='spawn')  # init
     queues = [mp.Queue(maxsize=4) for _ in camera_ip_l]
 
     processes = []
-    for queue, camera_ip in zip(queues, camera_ip_l):
+    for queue, camera_ip, port in zip(queues, camera_ip_l, ports):
         processes.append(mp.Process(target=image_put, args=(
             queue, user_name, user_pwd, camera_ip)))
-        processes.append(mp.Process(target=image_get, args=(queue, camera_ip)))
+        processes.append(mp.Process(target=image_get,
+                         args=(queue, camera_ip, port)))
 
     for process in processes:
         process.daemon = True

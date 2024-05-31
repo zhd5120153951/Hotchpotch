@@ -56,6 +56,7 @@ while True:
     # 寻找阈值图像中的轮廓并进行过滤
     contours, _ = cv2.findContours(
         threshold.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
     for contour in contours:
         if cv2.contourArea(contour) < 1000:
             continue
