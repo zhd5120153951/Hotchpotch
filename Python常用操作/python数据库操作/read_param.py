@@ -219,7 +219,7 @@ if __name__ == "__main__":
         cur, "SELECT * FROM video_analysis.camera_binding_algorithm WHERE id = '1'")
 
     print(f"users num:{len(rets)}")
-    # 处理users列表...
+    # 处理读取的数据库列表...
     for ret in rets:
         print(f"id:{ret.id} resource_id:{ret.resource_id} algorithm_id:{ret.algorithm_id} algorithm_config:{ret.algorithm_config} region_config:{ret.region_config} enable:{ret.enable} alarm_level:{ret.alarm_level}")
     close_pgsql(conn, cur)
