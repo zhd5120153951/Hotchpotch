@@ -37,6 +37,7 @@ def daemon_process_fun():
         # 检查子进程状态
         if not child.is_alive():
             print("Child process crashed, restarting...")
+            # child.terminate()
             # 重启子进程
             child.start()
         else:

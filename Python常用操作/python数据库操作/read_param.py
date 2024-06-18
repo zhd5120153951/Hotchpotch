@@ -1,5 +1,5 @@
 import psycopg2
-# import pyyaml
+import yaml
 
 # User类
 

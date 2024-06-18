@@ -1,3 +1,14 @@
+'''
+@FileName   :DEMO_multi_processing.py
+@Description:进程间通信方式
+@Date       :2024/06/18 13:56:41
+@Author     :daito
+@Website    :Https://github.com/zhd5120153951
+@Copyright  :daito
+@License    :None
+@version    :1.0
+@Email      :2462491568@qq.com
+'''
 import time
 import numpy as np
 import multiprocessing as mp
@@ -45,8 +56,9 @@ def func1(i):
 def func2(args):  # multiple parameters (arguments)
     # x, y = args
     x = args[0]  # write in this way, easier to locate errors
+    print(f'x:{x}')
     y = args[1]  # write in this way, easier to locate errors
-
+    print(f'y:{y}')
     time.sleep(1)  # pretend it is a time-consuming operation
     return x - y
 
@@ -54,14 +66,15 @@ def func2(args):  # multiple parameters (arguments)
 def run__pool():  # main process
     from multiprocessing import Pool
 
-    cpu_worker_num = 3
+    cpu_worker_num = 4
     process_args = [(1, 1), (9, 9), (4, 4), (3, 3), ]
 
     print(f'| inputs:  {process_args}')
     start_time = time.time()
     with Pool(cpu_worker_num) as p:
         outputs = p.map(func2, process_args)
-    print(f'| outputs: {outputs}    TimeUsed: {time.time() - start_time:.1f}    \n')
+    print(
+        f'| outputs: {outputs}    TimeUsed: {time.time() - start_time:.1f}    \n')
 
     '''Another way (I don't recommend)
     Using 'functions.partial'. See https://stackoverflow.com/a/25553970/9293137
@@ -84,9 +97,9 @@ def run__pipe():
 
     conn1, conn2 = Pipe()
 
-    process = [Process(target=func_pipe1, args=(conn1, 'I1')),
-               Process(target=func_pipe2, args=(conn2, 'I2')),
-               Process(target=func_pipe2, args=(conn2, 'I3')), ]
+    process = [Process(target=func_pipe1, args=(conn1, 'Pipe1')),
+               Process(target=func_pipe2, args=(conn2, '这是2')),
+               Process(target=func_pipe2, args=(conn2, '我是三')), ]
 
     [p.start() for p in process]
     print('| Main', 'send')
@@ -98,7 +111,8 @@ def run__pipe():
 def run__queue():
     from multiprocessing import Process, Queue
 
-    queue = Queue(maxsize=4)  # the following attribute can call in parent(main) or child process, just like 'Pipe'
+    # the following attribute can call in parent(main) or child process, just like 'Pipe'
+    queue = Queue(maxsize=4)
     queue.put(True)
     queue.put([0, None, object])  # you can put deepcopy thing
     queue.qsize()  # the length of queue
@@ -115,4 +129,5 @@ def run__queue():
 if __name__ == '__main__':  # it is necessary to write main process in "if __name__ == '__main__'"
     # run__process()
     # run__pool()
-    run__pipe()
+    # run__pipe()
+    run__queue()
