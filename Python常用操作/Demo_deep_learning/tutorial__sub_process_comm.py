@@ -1,3 +1,6 @@
+from multiprocessing import Pool
+from random import random
+from time import sleep
 import multiprocessing
 import time
 from multiprocessing import Process, Pipe
@@ -66,18 +69,15 @@ def main():
 #     main()  # use Process to run Process
 
 
-
 # SuperFastPython.com
 # example of getting a result from an asynchronous task issued with apply_async
-from time import sleep
-from random import random
-from multiprocessing import Pool
 
 
 # task executed in a child process
 def task(value):
     # generate a random value between 0 and 1
     # block for a moment
+    print(value)
     sleep(value)
     # return the generated value
     return value
@@ -85,6 +85,11 @@ def task(value):
 
 # protect the entry point
 if __name__ == '__main__':
+
+    # multiprocessing.set_start_method('spawn')
+    # run()  # run Process
+    # main()  # use Process to run Process
+
     # create the process pool
     with Pool(processes=4) as pool:
         # issue a task asynchronously
