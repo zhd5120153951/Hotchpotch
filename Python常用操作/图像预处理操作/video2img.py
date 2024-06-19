@@ -30,7 +30,7 @@ def video2img(filename, i):
 
         # width = frame.shape[1]
         # height = frame.shape[0]
-        if (cnt % 10) == 0:  # 每隔25帧取一张图
+        if (cnt % 25) == 0:  # 每隔25帧取一张图
             cv2.imwrite(img_path + '\\' + str(i)+'__'+str(dnt) +
                         '.jpg', frame)
             dnt += 1
@@ -44,8 +44,8 @@ def video2img(filename, i):
 
 if __name__ == '__main__':
     # 传入的视频路径和输出图像路径
-    video_path = 'D:\\FilePackage\\gaoqiang\\'
-    img_path = 'D:\\FilePackage\\plate-img'
+    video_path = 'F:\\WorkPlace\\yolov5-tensorrt\\smoke_video\\'
+    img_path = 'F:\\DataSet\\zhongkewubao\\smoke_wubao_v2'
 
     filelist = os.listdir(video_path)
     for i, filename in enumerate(filelist):
