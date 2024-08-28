@@ -36,3 +36,7 @@
 
 # vscode run coder插件生成的__pycache__
 __pycache__/
+
+# vs 2022的.sln
+*.sln
+*.vscode/
