@@ -6,10 +6,10 @@ from os.path import join
 import random
 from shutil import copyfile
 
-# 分类名称  这里改成数据集的分类名称，一定要改！！！请查看数据集目录下的txt文件
-CLASSES = ["person", "cigarette"]
+# 类别
+CLASSES = ["sleep"]
 # 数据集目录
-PATH = 'D:\\FilePackage\\datasets\\cigarette'
+PATH = 'E:\\Datasets\\sleep\\val'
 # 训练集占比80% 训练集:验证集=8:2 这里划分数据集 不用改
 TRAIN_RATIO = 80
 
@@ -68,41 +68,43 @@ def convert_annotation(image_id):
     out_file.close()
 
 
-wd = os.getcwd()
+if __name__ == "__main__":
 
-work_sapce_dir = os.path.join(wd, PATH+"/")
-print(work_sapce_dir)
+    wd = os.getcwd()
 
-annotation_dir = os.path.join(work_sapce_dir, "xml/")
-if not os.path.isdir(annotation_dir):
-    os.mkdir(annotation_dir)
-clear_hidden_files(annotation_dir)
+    work_sapce_dir = os.path.join(wd, PATH+"/")
+    print(work_sapce_dir)
 
-image_dir = os.path.join(work_sapce_dir, "images/")
-if not os.path.isdir(image_dir):
-    os.mkdir(image_dir)
-clear_hidden_files(image_dir)
+    annotation_dir = os.path.join(work_sapce_dir, "xml/")
+    if not os.path.isdir(annotation_dir):
+        os.mkdir(annotation_dir)
+    clear_hidden_files(annotation_dir)
 
-yolo_labels_dir = os.path.join(work_sapce_dir, "txt/")
-if not os.path.isdir(yolo_labels_dir):
-    os.mkdir(yolo_labels_dir)
-clear_hidden_files(yolo_labels_dir)
+    image_dir = os.path.join(work_sapce_dir, "images/")
+    if not os.path.isdir(image_dir):
+        os.mkdir(image_dir)
+    clear_hidden_files(image_dir)
 
-list_imgs = os.listdir(image_dir)  # list image files
-print("数据集: %d个" % len(list_imgs))
-for i in range(0, len(list_imgs)):
-    path = os.path.join(image_dir, list_imgs[i])
-    if os.path.isfile(path):
-        image_path = image_dir + list_imgs[i]
-        voc_path = list_imgs[i]
-        (nameWithoutExtention, extention) = os.path.splitext(
-            os.path.basename(image_path))
-        (voc_nameWithoutExtention, voc_extention) = os.path.splitext(
-            os.path.basename(voc_path))
-        annotation_name = nameWithoutExtention + '.xml'
-        annotation_path = os.path.join(annotation_dir, annotation_name)
-        label_name = nameWithoutExtention + '.txt'
-        label_path = os.path.join(yolo_labels_dir, label_name)
+    yolo_labels_dir = os.path.join(work_sapce_dir, "txt/")
+    if not os.path.isdir(yolo_labels_dir):
+        os.mkdir(yolo_labels_dir)
+    clear_hidden_files(yolo_labels_dir)
 
-    if os.path.exists(annotation_path):
-        convert_annotation(nameWithoutExtention)  # convert label
+    list_imgs = os.listdir(image_dir)  # list image files
+    print("数据集: %d个" % len(list_imgs))
+    for i in range(0, len(list_imgs)):
+        path = os.path.join(image_dir, list_imgs[i])
+        if os.path.isfile(path):
+            image_path = image_dir + list_imgs[i]
+            voc_path = list_imgs[i]
+            (nameWithoutExtention, extention) = os.path.splitext(
+                os.path.basename(image_path))
+            (voc_nameWithoutExtention, voc_extention) = os.path.splitext(
+                os.path.basename(voc_path))
+            annotation_name = nameWithoutExtention + '.xml'
+            annotation_path = os.path.join(annotation_dir, annotation_name)
+            label_name = nameWithoutExtention + '.txt'
+            label_path = os.path.join(yolo_labels_dir, label_name)
+
+        if os.path.exists(annotation_path):
+            convert_annotation(nameWithoutExtention)  # convert label

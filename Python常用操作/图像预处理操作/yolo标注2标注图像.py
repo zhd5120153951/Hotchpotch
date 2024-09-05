@@ -17,13 +17,13 @@ import pandas as pd
 import cv2
 
 # alphabet3 = ['fire', 'smoke', 'person']
-classes = ['person', 'cigarette']
+classes = ['sleep']
 label_root = Path(
-    "D:\\FilePackage\\datasets\\cigarette\\labels\\val")  # 替换为实际的标注文件夹路径
+    "E:\\Datasets\\sleep\\train\\txt")  # 替换为实际的标注文件夹路径
 image_root = Path(
-    "D:\\FilePackage\\datasets\\cigarette\\images\\val")  # 替换为实际的图像文件夹路径
+    "E:\\Datasets\\sleep\\train\\images")  # 替换为实际的图像文件夹路径
 output_root = Path(
-    "D:\\FilePackage\\datasets\\cigarette\\yolo2img")  # 替换为实际的输出文件夹路径
+    "E:\\Datasets\\sleep\\train\\yolo2img")  # 替换为实际的输出文件夹路径
 
 
 def paint(label_file, image_file, output_file):
@@ -146,5 +146,5 @@ if __name__ == "__main__":
         image_file = image_root / (label_file.stem + ".jpg")
         output_image_file = output_image_folder / (label_file.stem + ".jpg")
         output_txt_file = output_txt_folder / (label_file.stem+".txt")
-        # paint(label_file, image_file, output_image_file)
-        cropImg(label_file, image_file, output_image_file, output_txt_file)
+        paint(label_file, image_file, output_image_file)
+        # cropImg(label_file, image_file, output_image_file, output_txt_file)
