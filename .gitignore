@@ -40,4 +40,4 @@ __pycache__/
 # vs 2022的.sln
 *.sln
 .vscode/
-/Scripts/__pycache__/
+__pycache__/
