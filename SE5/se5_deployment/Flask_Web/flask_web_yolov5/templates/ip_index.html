@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>配置页面</title>
+</head>
+
+<body>
+    <h1>配置IP地址</h1>
+    <form id="config-form" action="/save_config" method="post">
+        <label for="ip_address">IP地址:</label>
+        <input type="text" id="ip_address" name="ip_address" required>
+
+        <label for="mask_code">子网掩码:</label>
+        <input type="text" id="mask_code" name="mask_code" required>
+
+        <label for="gateway">网关:</label>
+        <input type="text" id="gateway" name="gateway" required>
+
+        <label for="dns">域名:</label>
+        <input type="text" id="dns" name="dns" required>
+
+        <br>
+        <button type="submit">保存配置</button>
+    </form>
+</body>
+
+</html>

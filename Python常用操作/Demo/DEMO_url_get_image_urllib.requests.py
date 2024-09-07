@@ -9,7 +9,8 @@ from bs4 import BeautifulSoup
 
 
 def url_to_image(url):
-    headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'}
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'}
     url = urllib.request.Request(url=url, headers=headers)
 
     response = urllib.request.urlopen(url)
@@ -19,7 +20,8 @@ def url_to_image(url):
 
 
 def url_to_text(url, tag, tag_class):
-    headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'}
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'}
     url = urllib.request.Request(url=url, headers=headers)
 
     response = urllib.request.urlopen(url)
@@ -61,7 +63,8 @@ def collect_images_from_urls(url_img_s):
     os.mkdir(img_save_dirt) if not os.path.exists(img_save_dirt) else None
     try:
         for url_img in url_img_s:
-            img_save_name = "%s_%s.jpg" % (url_img.split('/')[-1], int(time.time()))
+            img_save_name = "%s_%s.jpg" % (
+                url_img.split('/')[-1], int(time.time()))
             img_save_path = os.path.join(img_save_dirt, img_save_name)
             img = url_to_image(url_img)
             cv2.imwrite(img_save_path, img), print(img_save_name)

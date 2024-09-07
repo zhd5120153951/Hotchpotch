@@ -2,7 +2,6 @@ import multiprocessing as mp
 import cv2
 import numpy as np
 import os
-
 """
 2018-06-03 Yonv1943
 2018-06-08 stable, compare the real time frames, and draw the contours of the moving objects
@@ -62,7 +61,7 @@ class DrawROI(object):  # draw Region of Interest
                 self.roi_pts = []  # initialize the pts
                 self.done = False
 
-    def draw_roi(self, line_color=(234, 234, 234)):
+    def draw_roi(self, line_color=(24, 23, 34)):
         """
         drawing-filled-polygon-using-mouse-events-in-open-cv-using-python
         https://stackoverflow.com/questions/37099262/
@@ -119,8 +118,11 @@ class EdgeDetection(object):  # FrogEyes
         img = self.img_preprocessing(img)
         background_change_after_read_image_number = 64  # change time = 0.04*number = 2.7 = 0.4*64
         self.img_list = [img for _ in range(background_change_after_read_image_number)]
-        self.high_light_roi_mat = cv2.fillPoly(np.ones(self.roi_mat.shape, dtype=np.float) * 0.25,
-                                               self.roi_pts, (1.0, 1.0, 1.0), )  # highlight the roi
+        self.high_light_roi_mat = cv2.fillPoly(
+            np.ones(self.roi_mat.shape, dtype=np.float) * 0.25,
+            self.roi_pts,
+            (1.0, 1.0, 1.0),
+        )  # highlight the roi
 
         self.img_len0 = int(360)
         self.img_len1 = int(self.img_len0 / (img.shape[0] / img.shape[1]))
@@ -158,8 +160,10 @@ class EdgeDetection(object):  # FrogEyes
             # contours = hulls
 
             approxs = [cv2.approxPolyDP(cnt, self.min_side_len, True) for cnt in contours]
-            approxs = [approx for approx in approxs
-                       if len(approx) > self.min_side_num and cv2.arcLength(approx, True) > self.min_poly_len]
+            approxs = [
+                approx for approx in approxs
+                if len(approx) > self.min_side_num and cv2.arcLength(approx, True) > self.min_poly_len
+            ]
             contours = approxs
         return contours
 
@@ -179,7 +183,7 @@ class EdgeDetection(object):  # FrogEyes
         return show_img
 
 
-def queue_img_put(q, name, pwd, ip, channel=1):
+def queue_img_put(q, name, pwd, ip, channel=101):
     cap = cv2.VideoCapture("rtsp://%s:%s@%s//Streaming/Channels/%d" % (name, pwd, ip, channel))
     while True:
         is_opened, frame = cap.read()
@@ -202,12 +206,14 @@ def queue_img_get(q, window_name):
 
 
 def run():
-    user_name, user_pwd, camera_ip = "admin", "password", "192.168.1.164"
+    user_name, user_pwd, camera_ip = "admin", "jiankong123", "192.168.23.13"
 
     mp.set_start_method(method='spawn')  # multi-processing init
     queue = mp.Queue(maxsize=2)
-    processes = [mp.Process(target=queue_img_put, args=(queue, user_name, user_pwd, camera_ip)),
-                 mp.Process(target=queue_img_get, args=(queue, camera_ip))]
+    processes = [
+        mp.Process(target=queue_img_put, args=(queue, user_name, user_pwd, camera_ip)),
+        mp.Process(target=queue_img_get, args=(queue, camera_ip))
+    ]
 
     [setattr(process, "daemon", True) for process in processes]  # process.daemon = True
     [process.start() for process in processes]
