@@ -31,8 +31,8 @@
 *.out
 *.app
 
+*.log
+
 __pycache__/
 
 .vscode/
-
-*.log
