@@ -1,7 +1,7 @@
 import time
 import datetime
-from ai_common import setting
-from ai_common.img_capture import capture_data
+import setting
+from img_capture import capture_data
 
 
 def capture_data_job(back_ground_scheduler):

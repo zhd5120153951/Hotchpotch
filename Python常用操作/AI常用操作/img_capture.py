@@ -1,11 +1,10 @@
 import os
-
-from ai_common import setting
-from ai_common.img_util import *
+import setting
+from img_util import *
 import requests
-from ai_common.exception_util import package_code_exception
-from ai_common.log_util import logger
-from utils.torch_utils import time_sync
+from exception_util import package_code_exception
+from log_util import logger
+# from utils.torch_utils import time_sync
 
 
 def cap_rtsp(json, job_id):
@@ -231,7 +230,7 @@ def cap_data(json_list, job_id):
 
 
 def capture_data(json_list, job_id):
-    t1 = time_sync()
+    # t1 = time_sync()
     cap_data(json_list, job_id)
-    t2 = time_sync()
+    # t2 = time_sync()
     logger.info(f'The first step is time-consuming ({t2 - t1:.3f}s).')

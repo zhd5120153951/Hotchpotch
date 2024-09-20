@@ -1,8 +1,8 @@
 import json
 import codecs
 
-from ai_common import setting
-from ai_common.log_util import logger
+import setting
+from log_util import logger
 
 
 def parse_json_file(json_path):

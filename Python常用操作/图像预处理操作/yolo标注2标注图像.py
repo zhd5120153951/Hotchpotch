@@ -17,13 +17,13 @@ import pandas as pd
 import cv2
 
 # alphabet3 = ['fire', 'smoke', 'person']
-classes = ['sleep']
+classes = ['pd_kz', 'pd_fz', 'pd_fzs', 'pd_yw', 'pd_dkm']
 label_root = Path(
-    "E:\\Datasets\\sleep\\train\\txt")  # 替换为实际的标注文件夹路径
+    "E:\\Datasets\\belt\\belt_use\\roboflow_240918_train")  # 替换为实际的标注文件夹路径
 image_root = Path(
-    "E:\\Datasets\\sleep\\train\\images")  # 替换为实际的图像文件夹路径
+    "E:\\Datasets\\belt\\belt_use\\roboflow_240918_train")  # 替换为实际的图像文件夹路径
 output_root = Path(
-    "E:\\Datasets\\sleep\\train\\yolo2img")  # 替换为实际的输出文件夹路径
+    "E:\\Datasets\\belt\\yolo2img")  # 替换为实际的输出文件夹路径
 
 
 def paint(label_file, image_file, output_file):

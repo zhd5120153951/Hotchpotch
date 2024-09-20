@@ -1,5 +1,6 @@
 import time
-from ai_common import setting
+import setting
+
 
 def package_code_exception(exception_info, exception_code, device_id):
     exception_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())

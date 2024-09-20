@@ -3,9 +3,9 @@ import os
 import shutil
 import time
 
-from ai_common import setting
-from ai_common.log_util import logger
-from ai_common.result_path_util import result_path
+import setting
+from log_util import logger
+from result_path_util import result_path
 
 
 def rm_alarm():

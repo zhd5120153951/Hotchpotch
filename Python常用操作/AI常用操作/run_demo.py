@@ -2,9 +2,9 @@ import copy
 import os
 import cv2
 
-from ai_common import setting
-from ai_common.img_capture import cap_rtsp_native
-from ai_common.log_util import logger
+import setting
+from img_capture import cap_rtsp_native
+from log_util import logger
 
 
 def run_demo_main(process_data):
