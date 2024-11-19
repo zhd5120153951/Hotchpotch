@@ -1,6 +1,6 @@
 '''
 @FileName   :segmentlabel_json2txt.py
-@Description:
+@Description:把分割的json格式转为txt--v5-seg、v8-seg适用
 @Date       :2024/09/20 13:57:36
 @Author     :daito
 @Website    :Https://github.com/zhd5120153951
@@ -61,7 +61,7 @@ def create_directory(directory_folder):
 # 创建使用的yaml文件
 
 
-def create_yaml(output_folder: Path, sorted_key: list):
+def create_yaml(output_folder: Path, sorted_key: list, yaml_name: str):
     train_img_path = Path('images')/'train'
     val_img_path = Path('images')/'val'
     train_label_path = Path('labels')/'train'
@@ -77,11 +77,11 @@ def create_yaml(output_folder: Path, sorted_key: list):
         'val': val_img_path.as_posix(),
         'names': names_dict
     }
-    yaml_file_path = output_folder/'yolo.yaml'
+    yaml_file_path = f'{output_folder}/{yaml_name}.yaml'
     with open(yaml_file_path, 'w') as yaml_file:
         yaml.dump(yaml_dict, yaml_file,
                   default_flow_style=False, sort_keys=False)
-    print(f'yaml file created in {yaml_file_path.as_posix()}')
+    print(f'yaml file created in {yaml_file_path}')
 
 
 def get_labels_and_json_path(input_folder: Path):
@@ -132,6 +132,8 @@ if __name__ == '__main__':
     parser.add_argument(
         'output_folder', default='E:\\Datasets\\belt\\belt_seg_v8', help='output txt files folder')
     parser.add_argument('split_rate', default='0.2', help='train and val rate')
+    parser.add_argument('yaml_name', default='yolov8s-belt-seg.yaml',
+                        help='auto yeild yaml name')
 
     args = parser.parse_args()
     input_folder = Path(args.input_folder)
@@ -139,5 +141,5 @@ if __name__ == '__main__':
     split_rate = float(args.split_rate)
 
     sorted_key, json_file_paths = get_labels_and_json_path(input_folder)
-    create_yaml(output_folder, sorted_key)
+    create_yaml(output_folder, sorted_key, args.yaml_name)
     label_to_yolo(json_file_paths, output_folder, sorted_key, split_rate)
