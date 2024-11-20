@@ -9,21 +9,25 @@
 @version    :1.0
 @Email      :2462491568@qq.com
 '''
-import tkinter as tk
-import tkinter.messagebox as messagebox
+import os
 import pyautogui
 import cv2
-import numpy as np
-from datetime import datetime
 import threading
 import pyaudio
 import wave
-import os
-from moviepy.editor import VideoFileClip, AudioFileClip
 
 # 隐藏命令行
 import win32console
 import win32gui
+
+import numpy as np
+import tkinter as tk
+import tkinter.messagebox as messagebox
+
+from datetime import datetime
+from moviepy.editor import VideoFileClip, AudioFileClip
+
+
 win = win32console.GetConsoleWindow()
 win32gui.ShowWindow(win, 0)
 

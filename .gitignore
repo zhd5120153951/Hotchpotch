@@ -32,6 +32,8 @@
 *.app
 
 *.log
+*.jpg
+*.png
 
 __pycache__/
 
