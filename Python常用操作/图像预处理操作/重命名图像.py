@@ -75,11 +75,11 @@ def selectBySuffiex(jpgPath, txtPath, new_name_prefix, start_number):
 
 if __name__ == "__main__":
     # folder_path = 'D:\\FilePackage\\datasets\\Object Detect\\fire\\images\\val'
-    # folder_path = 'D:\\FilePackage\\datasets\\Object Detect\\fire\\images\\train\\背景图'
-    jpgPath = 'F:\\DataSet\\yolo_format_fire\\val_img'
-    txtPath = 'F:\\DataSet\\yolo_format_fire\\val_txt'
+    folder_path = 'E:\\Datasets\\belt\\belt20241225'
+    # jpgPath = 'E:\\Datasets\\sleep\\sleep20241225'
+    # txtPath = 'F:\\DataSet\\yolo_format_fire\\val_txt'
     # folder_path = 'D:\\FilePackage\\datasets\\gas'
-    new_name_prefix = 'fire_4_'
+    new_name_prefix = 'capture_'
     start_number = 1
-    # rename_files(folder_path, new_name_prefix)
-    selectBySuffiex(jpgPath, txtPath, new_name_prefix, start_number)
+    rename_files(folder_path, new_name_prefix)
+    # selectBySuffiex(jpgPath, txtPath, new_name_prefix, start_number)
