@@ -14,7 +14,7 @@ import random
 import shutil
 
 # 输入文件夹路径和划分比例
-folder_path = "E:\\Datasets\\sleep20241225"
+folder_path = "E:\\Datasets\\sleep\\labeled-data\\sleep-v3"
 train_ratio = 0.8
 
 # 检查文件夹是否存在
@@ -56,14 +56,24 @@ if not os.path.exists(txt_val_folder):
     os.makedirs(txt_val_folder)
 
 # 复制文件到目标文件夹
-for file in train_jpg:
-    shutil.copy(os.path.join(folder_path, file), img_train_folder)
-for file in train_txt:
-    shutil.copy(os.path.join(folder_path, file), txt_train_folder)
-for file in val_jpg:
-    shutil.copy(os.path.join(folder_path, file), img_val_folder)
-for file in val_txt:
-    shutil.copy(os.path.join(folder_path, file), txt_val_folder)
+# for file in train_jpg:
+#     shutil.copy(os.path.join(folder_path, file), img_train_folder)
 
+# for file in train_txt:
+#     shutil.copy(os.path.join(folder_path, file), txt_train_folder)
+# for file in val_jpg:
+#     shutil.copy(os.path.join(folder_path, file), img_val_folder)
+# for file in val_txt:
+#     shutil.copy(os.path.join(folder_path, file), txt_val_folder)
+
+# 移动文件到目标文件夹
+for file in train_jpg:
+    shutil.move(os.path.join(folder_path, file), img_train_folder)
+for file in train_txt:
+    shutil.move(os.path.join(folder_path, file), txt_train_folder)
+for file in val_jpg:
+    shutil.move(os.path.join(folder_path, file), img_val_folder)
+for file in val_txt:
+    shutil.move(os.path.join(folder_path, file), txt_val_folder)
 
 print("处理完成！")

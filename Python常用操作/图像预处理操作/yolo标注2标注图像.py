@@ -17,13 +17,13 @@ import pandas as pd
 import cv2
 
 # alphabet3 = ['fire', 'smoke', 'person']
-classes = ['pd_kz', 'pd_fz', 'pd_fzs', 'pd_yw', 'pd_dkm']
+classes = ['stand', 'sit', 'no_sleep', 'sleep']
 label_root = Path(
-    "E:\\Datasets\\belt\\belt_use\\roboflow_240918_train")  # 替换为实际的标注文件夹路径
+    "E:\\Datasets\\sleep\\labeled-data\\sleep-v3\\xxx\\labels")  # 替换为实际的标注文件夹路径
 image_root = Path(
-    "E:\\Datasets\\belt\\belt_use\\roboflow_240918_train")  # 替换为实际的图像文件夹路径
+    "E:\\Datasets\\sleep\\labeled-data\\sleep-v3\\xxx\\images")  # 替换为实际的图像文件夹路径
 output_root = Path(
-    "E:\\Datasets\\belt\\yolo2img")  # 替换为实际的输出文件夹路径
+    "E:\\Datasets\\sleep\\labeled-data\\sleep-v3\\dst_dir")  # 替换为实际的输出文件夹路径
 
 
 def paint(label_file, image_file, output_file):
@@ -134,6 +134,24 @@ def cropImg(label_file, image_file, output_image_file, output_txt_file):
         print('Error message:', str(e))
 
 
+def filterErrorImg(srcDir, dstDir):
+    # 修复图像另存地址。没有该文件夹就创建。
+    if not os.path.exists(dstDir):
+        os.makedirs(dstDir)
+    # 遍历有问题的数据文件夹，中找到所有的图片。
+    for fileName in os.listdir(srcDir):
+        filePath = Path(os.path.join(srcDir, fileName))
+        # 图片扩展名
+        if filePath.suffix.lower() in [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff"]:
+            try:
+                img = cv2.imread(os.path.join(srcDir, fileName))  # 读图像数据
+                new_path = os.path.join(dstDir, fileName)
+                cv2.imwrite(new_path, img)  # 另存同名，同扩展名图像。不破坏数据集
+            except cv2.error as e:
+                print("图片损坏,图片名称：", fileName, e)
+    print("全部图像已另存！")
+
+
 # 创建保存新图像的文件夹
 output_image_folder = output_root / 'images'
 output_txt_folder = output_root / 'txt'
@@ -141,6 +159,8 @@ output_txt_folder = output_root / 'txt'
 output_image_folder.mkdir(parents=True, exist_ok=True)
 output_txt_folder.mkdir(parents=True, exist_ok=True)
 if __name__ == "__main__":
+    # filterErrorImg(image_root, output_root)
+    # exit()
     # 遍历标注文件夹中的所有txt文件
     for label_file in label_root.glob("*.txt"):
         image_file = image_root / (label_file.stem + ".jpg")
