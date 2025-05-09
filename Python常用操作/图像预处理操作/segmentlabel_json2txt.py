@@ -37,7 +37,7 @@ def copy_labeled_img(json_path: Path, target_folder: Path, task: str):
 
 
 def json_to_yolo(json_path: Path, sorted_key: list):
-    with open(json_path, 'r') as f:
+    with open(json_path, 'r', encoding='utf-8') as f:
         labeled_data = json.load(f)
     width = labeled_data['imageWidth']
     height = labeled_data['imageHeight']
@@ -88,7 +88,7 @@ def get_labels_and_json_path(input_folder: Path):
     json_file_paths = list(input_folder.rglob('*.json'))
     label_counts = defaultdict(int)
     for json_file_path in json_file_paths:
-        with open(json_file_path, 'r') as json_file:
+        with open(json_file_path, 'r', encoding='utf-8') as json_file:
             label_data = json.load(json_file)
         for shape in label_data['shapes']:
             label = shape['label']
