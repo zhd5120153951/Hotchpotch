@@ -126,6 +126,8 @@ def label_to_yolo(json_file_paths: list, output_folder: Path, sorted_key: list, 
 
 
 if __name__ == '__main__':
+    # 执行命令
+    # python segmentlabel_json2txt.py E:\Datasets\belt\belt_seg_v8 E:\Datasets\belt\belt_seg_v8 0.2 yolov8s-belt-seg
     parser = argparse.ArgumentParser(description='label2yolo')
     parser.add_argument('input_folder', default='E:\\Datasets\\belt\\belt_seg_v8',
                         help='input labeled files folder')
