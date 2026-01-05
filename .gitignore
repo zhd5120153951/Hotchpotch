@@ -33,3 +33,7 @@
 
 .idea/
 __pycache__/
+.vscode/
+*.log
+node_modules/
+dist/
