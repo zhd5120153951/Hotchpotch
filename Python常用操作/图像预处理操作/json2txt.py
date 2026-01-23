@@ -1,9 +1,19 @@
-# 处理labelme多边形矩阵的标注  json转化txt
-import json
+'''
+@FileName   :json2txt.py
+@Description:多边形矩阵的标注  json转化txt
+@Date       :2026/01/23 15:29:06
+@Author     :daito
+@Website    :Https://github.com/zhd5120153951
+@Copyright  :daito
+@License    :None
+@version    :1.0
+@Email      :2462491568@qq.com
+'''
 import os
 import cv2
+import json
 
-name2id = {'火': 0, '烟雾': 1}
+name2id = {'henggang': 0, 'luoshuan': 1}
 
 
 def convert(img_size, box):
@@ -26,15 +36,16 @@ def decode_json(json_floder_path, txt_outer_path, json_name):
     txt_name = txt_outer_path + json_name[:-5] + '.txt'
     with open(txt_name, 'w') as f:
         json_path = os.path.join(json_floder_path, json_name)  # os路径融合
-        data = json.load(open(json_path, 'r', encoding='utf-8', errors='ignore'))
+        data = json.load(
+            open(json_path, 'r', encoding='utf-8', errors='ignore'))
         img_w = data['imageWidth']  # 图片的高
         img_h = data['imageHeight']  # 图片的宽
         imgpath = data['imagePath']
-        img=cv2.imread(jpgs_path+imgpath)
-        if img_h==0:
-            img_h=img.shape[0]
-        if img_w==0:
-            img_w=img.shape[1]
+        img = cv2.imread(jpgs_path+imgpath)
+        if img_h == 0:
+            img_h = img.shape[0]
+        if img_w == 0:
+            img_w = img.shape[1]
         isshape_type = data['shapes'][0]['shape_type']
         print(isshape_type)
         # print(isshape_type)
@@ -68,13 +79,14 @@ def decode_json(json_floder_path, txt_outer_path, json_name):
                 bb = (x1, y1, x2, y2)
             bbox = convert((img_w, img_h), bb)
             try:
-                f.write(str(name2id[label_name]) + " " + " ".join([str(a) for a in bbox]) + '\n')
+                f.write(str(name2id[label_name]) + " " +
+                        " ".join([str(a) for a in bbox]) + '\n')
             except:
                 pass
 
 
 if __name__ == "__main__":
-    jpgs_path='./jpgs/'
+    jpgs_path = './jpgs/'
     json_floder_path = '.\\jsons\\'  # 存放json的文件夹的绝对路径
     txt_outer_path = '.\\txts\\'  # 存放txt的文件夹绝对路径
     json_names = os.listdir(json_floder_path)
@@ -87,4 +99,3 @@ if __name__ == "__main__":
 
     # break
     print('转化全部完毕')
-

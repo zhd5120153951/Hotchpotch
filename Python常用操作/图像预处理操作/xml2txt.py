@@ -7,9 +7,9 @@ import random
 from shutil import copyfile
 
 # 分类名称  这里改成数据集的分类名称，一定要改！！！请查看数据集目录下的txt文件
-CLASSES = ["person", "phone"]
-# 数据集目录 这里改成数据集的根目录，根目录下有两个文件夹Annotations和JPEGImages，一定要改！！！
-PATH = 'D:\FilePackage\datasets\Y-烟雾24000'
+CLASSES = ["person", "cigarette"]
+# 数据集目录
+PATH = 'D:\\FilePackage\\datasets\\cigarette'
 # 训练集占比80% 训练集:验证集=8:2 这里划分数据集 不用改
 TRAIN_RATIO = 80
 
@@ -40,8 +40,8 @@ def convert(size, box):
 
 
 def convert_annotation(image_id):
-    in_file = open(PATH+'/annotations1/%s.xml' % image_id, encoding='utf-8')
-    out_file = open(PATH+'/yololabels1/%s.txt' %
+    in_file = open(PATH+'/xml/%s.xml' % image_id, encoding='utf-8')
+    out_file = open(PATH+'/txt/%s.txt' %
                     image_id, 'w', encoding='utf-8')
     tree = ET.parse(in_file)
     root = tree.getroot()
@@ -54,7 +54,9 @@ def convert_annotation(image_id):
             difficult = obj.find('difficult').text
         cls = obj.find('name').text
         if cls not in CLASSES or int(difficult) == 1:
+            # cls = "fire-extinguisher"  # 改为自己的命令
             continue
+
         cls_id = CLASSES.index(cls)
         xmlbox = obj.find('bndbox')
         b = (float(xmlbox.find('xmin').text), float(xmlbox.find('xmax').text), float(xmlbox.find('ymin').text),
@@ -67,58 +69,26 @@ def convert_annotation(image_id):
 
 
 wd = os.getcwd()
-wd = os.getcwd()
 
 work_sapce_dir = os.path.join(wd, PATH+"/")
+print(work_sapce_dir)
 
-annotation_dir = os.path.join(work_sapce_dir, "annotations1/")
+annotation_dir = os.path.join(work_sapce_dir, "xml/")
 if not os.path.isdir(annotation_dir):
     os.mkdir(annotation_dir)
 clear_hidden_files(annotation_dir)
-image_dir = os.path.join(work_sapce_dir, "images1/")
+
+image_dir = os.path.join(work_sapce_dir, "images/")
 if not os.path.isdir(image_dir):
     os.mkdir(image_dir)
 clear_hidden_files(image_dir)
-yolo_labels_dir = os.path.join(work_sapce_dir, "yololabels1/")
+
+yolo_labels_dir = os.path.join(work_sapce_dir, "txt/")
 if not os.path.isdir(yolo_labels_dir):
     os.mkdir(yolo_labels_dir)
 clear_hidden_files(yolo_labels_dir)
 
-yolov5_train_dir = os.path.join(work_sapce_dir, "train/")
-if not os.path.isdir(yolov5_train_dir):
-    os.mkdir(yolov5_train_dir)
-clear_hidden_files(yolov5_train_dir)
-yolov5_images_train_dir = os.path.join(yolov5_train_dir, "images/")
-if not os.path.isdir(yolov5_images_train_dir):
-    os.mkdir(yolov5_images_train_dir)
-clear_hidden_files(yolov5_images_train_dir)
-yolov5_labels_train_dir = os.path.join(yolov5_train_dir, "labels/")
-if not os.path.isdir(yolov5_labels_train_dir):
-    os.mkdir(yolov5_labels_train_dir)
-clear_hidden_files(yolov5_labels_train_dir)
-
-yolov5_test_dir = os.path.join(work_sapce_dir, "val/")
-if not os.path.isdir(yolov5_test_dir):
-    os.mkdir(yolov5_test_dir)
-clear_hidden_files(yolov5_test_dir)
-yolov5_images_test_dir = os.path.join(yolov5_test_dir, "images/")
-if not os.path.isdir(yolov5_images_test_dir):
-    os.mkdir(yolov5_images_test_dir)
-clear_hidden_files(yolov5_images_test_dir)
-yolov5_labels_test_dir = os.path.join(yolov5_test_dir, "labels/")
-if not os.path.isdir(yolov5_labels_test_dir):
-    os.mkdir(yolov5_labels_test_dir)
-clear_hidden_files(yolov5_labels_test_dir)
-
-
-train_file = open(os.path.join(wd, "yolov5_train.txt"), 'w', encoding='utf-8')
-test_file = open(os.path.join(wd, "yolov5_valid.txt"), 'w', encoding='utf-8')
-train_file.close()
-test_file.close()
-train_file = open(os.path.join(wd, "yolov5_train.txt"), 'a', encoding='utf-8')
-test_file = open(os.path.join(wd, "yolov5_valid.txt"), 'a', encoding='utf-8')
 list_imgs = os.listdir(image_dir)  # list image files
-prob = random.randint(1, 100)
 print("数据集: %d个" % len(list_imgs))
 for i in range(0, len(list_imgs)):
     path = os.path.join(image_dir, list_imgs[i])
@@ -133,21 +103,6 @@ for i in range(0, len(list_imgs)):
         annotation_path = os.path.join(annotation_dir, annotation_name)
         label_name = nameWithoutExtention + '.txt'
         label_path = os.path.join(yolo_labels_dir, label_name)
-    prob = random.randint(1, 100)
-    print("Probability: %d" % prob, i, list_imgs[i])
-    if (prob < TRAIN_RATIO):
-        # train dataset
-        if os.path.exists(annotation_path):
-            train_file.write(image_path + '\n')
-            convert_annotation(nameWithoutExtention)  # convert label
-            copyfile(image_path, yolov5_images_train_dir + voc_path)
-            copyfile(label_path, yolov5_labels_train_dir + label_name)
-    else:
-        # test dataset
-        if os.path.exists(annotation_path):
-            test_file.write(image_path + '\n')
-            convert_annotation(nameWithoutExtention)  # convert label
-            copyfile(image_path, yolov5_images_test_dir + voc_path)
-            copyfile(label_path, yolov5_labels_test_dir + label_name)
-train_file.close()
-test_file.close()
+
+    if os.path.exists(annotation_path):
+        convert_annotation(nameWithoutExtention)  # convert label
